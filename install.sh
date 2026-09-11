@@ -93,7 +93,10 @@ StartupWMClass=acer-x
 DESKTOP_EOF
 chmod 644 /usr/share/applications/acer-x.desktop
 
-ICON_SRC="app/icon.png"
+ICON_SRC="app/public/icon.png"
+if [ ! -f "$ICON_SRC" ]; then
+    ICON_SRC="app/icon.png"
+fi
 if [ -f "$ICON_SRC" ]; then
     for res in 32x32 48x48 64x64 128x128 256x256 512x512; do
         mkdir -p "/usr/share/icons/hicolor/${res}/apps"
