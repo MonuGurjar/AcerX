@@ -61,8 +61,6 @@ AcerX/
 
 * 💻 [**Hardware Compatibility Guide (Compatibility.md)**](Compatibility.md) — Supported Acer models, tested kernels (6.x & 7.x), and platform registers.
 * ❓ [**Frequently Asked Questions (FAQ.md)**](FAQ.md) — Nitro key detection, daemon persistence, Secure Boot MOK signing, and troubleshooting.
-* ⚡ [**AcerX vs. DAMX Architectural Comparison (AcerX_vs_DAMX.md)**](AcerX_vs_DAMX.md) — In-depth benchmark and feature differences.
-
 ---
 
 ## ✨ Features
