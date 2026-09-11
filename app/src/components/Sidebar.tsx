@@ -1,6 +1,6 @@
 import React from "react";
 
-export type TabType = "dashboard" | "fans" | "performance" | "lighting" | "graphs" | "settings";
+export type TabType = "dashboard" | "fans" | "battery" | "lighting" | "graphs" | "settings";
 
 interface SidebarProps {
   activeTab: TabType;
@@ -66,26 +66,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           <span>Fan Controls</span>
         </button>
 
-        {/* Item: Performance Tuning */}
+        {/* Item: Battery Care */}
         <button
-          onClick={() => onTabChange("performance")}
+          onClick={() => onTabChange("battery")}
           className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
-            activeTab === "performance"
+            activeTab === "battery"
               ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
               : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
             className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
-              activeTab === "performance" ? "text-gnome-accent" : "text-zinc-400"
+              activeTab === "battery" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"
           >
-            <path d="M12 4a8 8 0 00-8 8c0 2.2 1 4.2 2.6 5.6M20 12a8 8 0 00-2.6-5.6" />
-            <path d="M12 14a2 2 0 100-4 2 2 0 000 4z" />
-            <path d="M13.4 10.6L17 7" />
+            <rect x="2" y="7" width="16" height="10" rx="2" ry="2" />
+            <line x1="22" y1="11" x2="22" y2="13" />
+            <line x1="6" y1="10" x2="6" y2="14" />
+            <line x1="10" y1="10" x2="10" y2="14" />
           </svg>
-          <span>Performance Tuning</span>
+          <span>Battery Care</span>
         </button>
 
         {/* Item: Keyboard Lighting */}

@@ -6,7 +6,7 @@ import { TopBar } from "./components/TopBar";
 import { Sidebar, TabType } from "./components/Sidebar";
 import { Dashboard } from "./components/Dashboard";
 import { FansTab } from "./components/FansTab";
-import { PerformanceTab } from "./components/PerformanceTab";
+import { BatteryTab } from "./components/BatteryTab";
 import { LightingTab } from "./components/LightingTab";
 import { GraphsTab } from "./components/GraphsTab";
 import { SettingsTab } from "./components/SettingsTab";
@@ -76,12 +76,7 @@ export const App: React.FC = () => {
         <main className="flex-1 flex flex-col overflow-y-auto bg-transparent">
           {activeTab === "dashboard" && <Dashboard metrics={metrics} />}
           {activeTab === "fans" && <FansTab fans={metrics?.fans ?? null} />}
-          {activeTab === "performance" && (
-            <PerformanceTab
-              currentProfile={currentProfile}
-              onProfileChange={(p) => setCurrentProfile(p)}
-            />
-          )}
+          {activeTab === "battery" && <BatteryTab metrics={metrics} />}
           {activeTab === "lighting" && <LightingTab />}
           {activeTab === "graphs" && <GraphsTab metrics={metrics} />}
           {activeTab === "settings" && <SettingsTab metrics={metrics} />}

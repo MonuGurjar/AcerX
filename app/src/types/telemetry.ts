@@ -25,10 +25,32 @@ export interface FanMetrics {
   gpu_duty?: number;
 }
 
+export interface RamMetrics {
+  used_gb: number;
+  total_gb: number;
+  percent: number;
+}
+
+export interface StorageMetrics {
+  used_gb: number;
+  total_gb: number;
+  percent: number;
+}
+
+export interface IgpuMetrics {
+  name: string;
+  cur_freq_mhz: number;
+  max_freq_mhz: number;
+  utilization_percent: number;
+}
+
 export interface SystemMetrics {
   cpu: CpuMetrics;
   gpu: GpuMetrics;
   fans: FanMetrics;
+  ram?: RamMetrics;
+  storage?: StorageMetrics;
+  igpu?: IgpuMetrics;
   is_plugged_in: boolean;
   battery_percent: number;
   battery_status?: string;

@@ -53,10 +53,6 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
     }
   };
 
-  // Hardware max RPM: CPU blower reaches ~8100 RPM, GPU blower reaches ~7500 RPM on full 100% duty
-  const cpuPct = Math.min(Math.max(Math.round(((fans?.cpu_rpm || 0) / 8100) * 100), fans?.cpu_rpm ? 5 : 0), 100);
-  const gpuPct = Math.min(Math.max(Math.round(((fans?.gpu_rpm || 0) / 7500) * 100), fans?.gpu_rpm ? 5 : 0), 100);
-
   return (
     <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
       <section className="adw-card rounded-xl p-5 flex flex-col relative overflow-hidden" data-purpose="fan-controls-panel">
@@ -105,11 +101,6 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
                 alt="CPU Aerodynamic Turbine"
                 className="w-32 h-32 drop-shadow-[0_0_22px_rgba(45,212,191,0.4)]"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xs font-bold text-white bg-zinc-950/85 px-2.5 py-0.5 rounded-full border border-teal-500/50 backdrop-blur-sm shadow-md">
-                  {cpuPct}%
-                </span>
-              </div>
             </div>
 
             <div className="text-center">
@@ -152,11 +143,6 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
                 alt="GPU Aerodynamic Turbine"
                 className="w-32 h-32 drop-shadow-[0_0_22px_rgba(6,182,212,0.4)]"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xs font-bold text-white bg-zinc-950/85 px-2.5 py-0.5 rounded-full border border-cyan-500/50 backdrop-blur-sm shadow-md">
-                  {gpuPct}%
-                </span>
-              </div>
             </div>
 
             <div className="text-center">
