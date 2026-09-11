@@ -1,240 +1,113 @@
-# ❓ Frequently Asked Questions (FAQ)
+# ❓ Frequently Asked Questions (FAQ) for AcerX
 
-### 🔧 Driver Installation Fails
+---
 
-There are several common reasons for driver installation issues:
+### 🚀 What is AcerX and how does it work?
 
-1. **Incompatible Kernel Version**
-   Linuwu Sense drivers require **Linux kernel 6.13 or later**. If you're running an older kernel, the installation will fail. Please update your kernel before proceeding.
+**AcerX** is a unified, lightweight Linux hardware management suite created specifically for the **Acer Nitro V 15** (and compatible Nitro/Predator laptops). It replaces Windows-only proprietary utilities (NitroSense) with a fast, modern Linux architecture:
 
-2. **Secure Boot is Enabled**
-   Secure Boot prevents unsigned or untrusted kernel modules from loading. This can cause errors like:
+1. **`linuwu_sense`**: A Linux kernel C driver exposing Acer ACPI/WMI sensors, dual aerodynamic fan curves, and battery registers.
+2. **`void-controld`**: An ultra-low overhead, memory-safe Rust privileged hardware daemon running as a root systemd service (`acerx.service`, <3MB RAM).
+3. **`acerx-nitrokey.service`**: A dedicated background service monitoring the physical Nitro key via evdev event loop.
+4. **`acer-x`**: A responsive, Cyberpunk-inspired desktop HUD built with Tauri v2, React 19, and Tailwind CSS (<35MB RAM).
 
-   ```
-   modprobe: ERROR: could not insert 'linuwu_sense': Key was rejected by service
-   make: Error 1
-   ```
+---
 
-   **Solution**: The installer now creates a DAMX Machine Owner Key (MOK) and
-   asks you to schedule its enrollment. Set the requested one-time password,
-   reboot, choose **Enroll MOK → Continue → Yes**, enter the same password,
-   and reboot again. Then rerun `setup.sh`; it will sign Linuwu-Sense before
-   installing and loading it.
+### ⌨️ Does the hardware Nitro / PredatorSense Key work automatically?
 
-   The private signing key is stored root-only at
-   `/var/lib/damx/secureboot/DAMX-MOK.priv`. You can confirm enrollment with:
+**Yes!** During `sudo ./install.sh`:
+- The installer interactively prompts you: `[?] Do you want to configure your physical Nitro key now? [Y/n]`.
+- Press **Y** (or Enter), and press your physical **N** / **Predator** key when prompted.
+- The installer automatically captures your keyboard input device (e.g. `/dev/input/event3`) and scancode (`0xf5` / keycode `425` or `KEY_PROG1`), writes `/etc/acerx/nitro_key.conf`, and enables `acerx-nitrokey.service`.
+- When you press your physical Nitro key anytime on desktop, AcerX will launch or focus immediately!
+- If you skipped it during installation, you can configure it anytime:
+  ```bash
+  sudo /usr/local/share/acerx/scripts/nitro-key-detection.sh
+  ```
 
+---
+
+### 🔄 Does the hardware daemon run automatically on reboot?
+
+**Yes!** Both services are enabled as permanent systemd services:
+* `acerx.service`: Starts `/usr/local/bin/void-controld` on boot and keeps fan control, telemetry sockets (`/tmp/acerx.sock`), and thermal profiles active.
+* `acerx-nitrokey.service`: Listens for the physical Nitro key in the background.
+* Kernel module autoloading is registered under `/etc/modules-load.d/linuwu_sense.conf`, so the driver loads seamlessly on every reboot.
+
+You can verify their status anytime:
+```bash
+systemctl status acerx.service
+systemctl status acerx-nitrokey.service
+```
+
+---
+
+### 🔒 Secure Boot: Driver Installation or Modprobe Error
+
+If Secure Boot is enabled in your UEFI/BIOS, unsigned kernel modules may be blocked with:
+```text
+modprobe: ERROR: could not insert 'linuwu_sense': Key was rejected by service
+```
+
+**Solution**:
+1. Generate and enroll a Machine Owner Key (MOK):
    ```bash
-   sudo mokutil --test-key /var/lib/damx/secureboot/DAMX-MOK.der
+   mkdir -p ~/module-signing && cd ~/module-signing
+   openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj "/CN=AcerX-Key/"
+   sudo mokutil --import MOK.der
    ```
-
-   Disabling Secure Boot is no longer required on systems that support MOK
-   enrollment through shim.
-
-3. **Installation Path Contains Spaces**
-   If the installation directory contains spaces (e.g., `DAMX-0.8.8 (1)/setup.sh`), the install script may fail.
-   **Solution**: Move or rename the directory so it has **no spaces in the path**.
-
----
-
-### 🧩 GUI is Empty or Showing "Unknown Model" (Even Though Your Model Is Supported)
-
-This is usually caused by model detection issues:
-
-* **Acer Firmware Quirks**: Some Acer devices behave inconsistently during hardware detection.
-  **Try restarting your laptop** or **reinstalling the drivers**.
-
-* **Distro Compatibility Issues**:
-  The DAMX project is officially tested and supported on **Ubuntu only**. Other Linux distributions might introduce kernel or library incompatibilities, leading to missing features in the GUI.
+2. Enter a temporary password when prompted, then reboot.
+3. In the blue UEFI MOK management screen, select **Enroll MOK** → **Continue** → **Yes**, enter your password, and reboot.
+4. Sign the module:
+   ```bash
+   sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ~/module-signing/MOK.priv ~/module-signing/MOK.der /lib/modules/$(uname -r)/kernel/drivers/platform/x86/linuwu_sense.ko
+   sudo modprobe linuwu_sense
+   ```
+*(Alternatively, disable Secure Boot in UEFI BIOS settings).*
 
 ---
 
-### 🛑 It Shows "Unknown Model" and My Model Isn’t in the Compatibility List
+### 📊 How do the telemetry graphs and monitors work?
 
-No worries! Your device might still be supported unofficially.
-
-**Steps to try:**
-
-1. Open the **Internals Manager** in the GUI.
-2. Start the drivers with one of the following parameters:
-
-   * `nitro_v4` or `predator_v4`
-   * Optional: Add `enable_all` to unlock all features (RGB control, LCD override, etc.)
-3. If this works, you can **make the parameter persistent** using the Internals Manager.
-
-Want native support?
-
-* Head over to the Div-Linuwu Sense project and **submit your device’s quirk configuration in the driver itself** to help others in the community.
+AcerX provides simultaneous, zero-overhead telemetry:
+* **Dual Simultaneous Real-Time Graphs**:
+  * **Load Graph**: Instantaneous CPU and GPU utilization percentages.
+  * **Temperature Graph**: Thermal curves tracking package and hotspot temperatures in °C.
+* **Secondary Telemetry Grid**:
+  * **RAM Usage**: Real-time memory consumption and utilization percentage.
+  * **NVMe Storage Usage**: Primary partition storage utilization and remaining capacity.
+  * **Intel iGPU Monitor**: Full-width NVIDIA-style hardware card tracking Intel Xe / UHD integrated GPU utilization and clock speed.
 
 ---
 
-### 🛠️ I Want to Add Support for My Own Model – How?
+### 🔋 How do I use the Battery Care Limiter?
 
-You have two options:
-
-1. **Fork and Modify the Original Project**
-
-   * Clone the original [linuwu-sense](#) repository
-   * Add your model-specific quirks/configuration
-   * Build and test
-
-1. **Use the Div-Linuwu Sense Fork (Recommended)**
-
-   * This is a more stable, community-friendly fork tailored for **DAMX project integration**
-   * Submit your config via a pull request
-   * Active and regularly updated, unlike the upstream project
-  
-- The original developer seems to be busy and has very less time to review or update the code let alone take pull requests. thats why i've forked the project to make sure updates and pull requests get pushed fast.
+In the AcerX desktop interface, navigate to the **Battery** tab:
+* **80% Battery Care Limiter**: Toggle the limiter ON. The EC hardware will automatically stop charging at 80% to preserve chemical health and minimize heat during long plugged-in gaming or coding sessions.
+* **Calibration Mode**: Cycles the battery through calibration to recalibrate the gas gauge IC.
+* **USB Power-Off Charging**: Choose whether USB ports provide 5V power while the laptop is suspended or shut down.
 
 ---
 
-### 🛠️ How do I write the quirk configuration in the driver itself to get native support?
-Here's a user-friendly process to add support for a new Acer laptop model to the `linuwu_sense.c` driver:
+### 🌀 How do Fan Controls and Profiles work?
 
-### Step-by-Step Guide to Add a New Model Quirk
+* **Fan Tab**: Real-time tachometers show CPU and GPU blower RPMs. Switch between **Auto** (dynamic EC curve), **Max** (100% duty cycle), and **Custom** (drag fan sliders to precise percentages).
+* **Thermal Profiles**: Switch between **Eco**, **Quiet**, **Balanced**, **Performance**, and **Turbo**. The active profile is synchronized directly with ACPI `platform_profile`.
 
-1. **Identify Your Laptop Model**
-   - Run `sudo dmidecode -s system-product-name` in terminal to get your exact model name
-   - Note down any special features your model has (RGB keyboard, special cooling system, etc.)
+---
 
-2. **Check Existing Quirks**
-   - Look through the existing quirk entries in the file (search for `quirk_acer_` to find them)
-   - Find one that matches your laptop's capabilities as closely as possible
+### 🗑️ How do I completely uninstall AcerX?
 
-3. **Create Your Quirk Entry**
-   - Add a new entry in the quirks section following this format:
-     ```c
-     static struct quirk_entry quirk_acer_YOUR_MODEL = {
-        .predator_v4 = 1,             // If uses Predator Sense v4
-        .nitro_v4 = 1,                // If uses Nitro Sense v4
-        .nitro_sense = 1,             // If it does'nt support LCD Override and Boot Animation Sound use nitro_sense
-        .four_zone_kb = 1             // If has 4-zone RGB keyboard
-     
-        //special quirks (only add these if you know what you are doing and your hardware supports it)
-        .wireless = 1,                // If has special wireless handling
-        .brightness = -1,              // If has brightness control
-        .turbo = 1,                   // If has turbo mode (turbo mode is detected by driver itself, you don't explicitly need to enable it, is only needed in specific scenarios and models)
-        .cpu_fans = 1,                // Number of CPU fans
-        .gpu_fans = 1,                // Number of GPU fans
-     };
-     ```
-
-4. **Add DMI Match Entry**
-   - Add your model to the `acer_quirks` array:
-     ```c
-     {
-         .callback = dmi_matched,
-         .ident = "Acer Your Model Name",
-         .matches = {
-             DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-             DMI_MATCH(DMI_PRODUCT_NAME, "YOUR EXACT MODEL NAME"),
-         },
-         .driver_data = &quirk_acer_YOUR_MODEL,
-     },
-     ```
-
-5. **Test Your Changes**
-   - Save the driver and its changes in the DAMX's Linuwu Sense Directory
-
-   - Reinstall DAMX(will automatically reinstall the driver):
-
-   - Check dmesg for errors:
-     ```bash
-     dmesg
-     ```
-   - Check DAMX for all the features you wanted:
-     
-
-6. **Submit Your Changes**
-   - Fork the GitHub repository
-   - Create a branch for your changes
-   - Commit your changes with a descriptive message
-   - Create a pull request to the original repository
-
-### Example for a New Model 
-
-*If your model does not require much config and does not have special features like Four zone RGB kayboard you can just add:*
-```c
-/* Add to acer_quirks array (Starting around line 570): */
-
-   {
-         .callback = dmi_matched,
-         .ident = "Acer Nitro ANV15-51",
-         .matches = {
-             DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-             DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
-         },
-            .driver_data = &quirk_acer_nitro, //This line here tells which quirk list (struct) to use, since we want the default nitro_sense quirk, it'll initialize with just the default config 
-     },
+Run the included uninstaller with root privileges:
+```bash
+sudo ./uninstall.sh
 ```
-This will just enable the base quirk with defaults of nitro_sense
-
-Here are the default structs:
-- For predator_v4 use `.driver_data =  &quirk_acer_predator_v4` // Enables Base Predator_v4, use in predator models. <br>
-- For nitro_v4 use `.driver_data =  &quirk_acer_nitro_v4` // Enables Base Nitro_v4, use in nitro models. <br>
-- For nitro_sense use `.driver_data = &quirk_acer_nitro` //Used in nitro models without special features like lcd override and boot sound (like ANV15-51). <br>
-
-
-*For an "Acer Predator AN515-58" with all features:*
-
-```c
- static struct quirk_entry quirk_acer_nitro_an515_58 = {
-    .nitro_v4 = 1,
-    .four_zone_kb = 1,
- };
-
-/* Then add to acer_quirks array: */
-   {
-        .callback = dmi_matched,
-        .ident = "Acer Nitro AN515-58",
-        .matches = {
-            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-            DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-58"),
-        },
-        .driver_data = &quirk_acer_nitro_an515_58,
-    },
-```
-
-*For an "Acer Predator PHN16-73" with all special features:*
-
-```c
-static struct quirk_entry quirk_acer_predator_phn16_73 = {
-    .turbo = 1,
-    .cpu_fans = 1,
-    .gpu_fans = 1,
-    .predator_v4 = 1,
-    .four_zone_kb = 1
-};
-
-/* Then add to acer_quirks array: */
-{
-    .callback = dmi_matched,
-    .ident = "Acer Predator PHN16-73",
-    .matches = {
-        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-        DMI_MATCH(DMI_PRODUCT_NAME, "Predator PHN16-73"),
-    },
-    .driver_data = &quirk_acer_predator_phn16_73,
-},
-```
-
-### Troubleshooting Tips
-
-1. If features don't work:
-   - Try enabling `enable_all=1` parameter when loading the module to test all capabilities
-   - Check kernel logs with `dmesg` for clues
-
-2. If your model isn't detected:
-   - Double-check the exact product name in DMI
-   - Try wildcards if the name varies slightly between regions
-
-3. For RGB keyboard issues:
-   - Ensure `four_zone_kb = 1` is set
-   - Check if your keyboard responds to the existing RGB controls
-
-Remember to always keep a backup of your working kernel/driver before making changes!
+This cleanly stops and disables all systemd services, removes `/usr/local/bin/acer-x`, `/usr/local/bin/void-controld`, `/etc/acerx`, desktop launchers, icons, and removes the `linuwu_sense` kernel driver.
 
 ---
 
-Have more questions or need help?
-👉 Feel free to [open an issue](#issues) or join the discussions.
+### 💬 Need More Help or Found a Bug?
+
+Visit our official GitHub repository to report issues, contribute, or discuss features:
+👉 **[AcerX GitHub Issues](https://github.com/MonuGurjar/AcerX/issues)**
+

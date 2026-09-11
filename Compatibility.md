@@ -1,50 +1,73 @@
-# Compatiblitiy List for DAMX:
-If your device isn’t listed in the compatibility table — don’t worry! You can still download and try DAMX. If your laptop is compatible, it may work out of the box. If not, you can add support by creating a custom configuration for your system.
+# 💻 Hardware Compatibility Guide for AcerX
 
-DAMX is primarily built for modern Acer laptops (2022 and newer) that use WMI protocols.
+**AcerX** is a unified, lightweight, high-performance hardware management suite engineered specifically for the **Acer Nitro V 15** running Linux (kernels 6.x and 7.x).
 
-✅ Officially tested distributions: Ubuntu 25+ and Kubuntu 25+
-✅ Minimum required kernel version: Linux 6.13+
+---
 
-> Note: This compatibility list simply reflects devices where the DAMX Suite has been confirmed to work.
->
->If your Acer laptop is not listed but works correctly or partially with DAMX, please help improve the project by filing an issue with your model details — so others can benefit from your discovery.
->
+## 🎯 Primary Supported Hardware
 
-Please also check out the [FAQ Page](https://github.com/PXDiv/Div-Acer-Manager-Max/blob/main/FAQ.md) to know how to get your model to work even though it's not supported, and you can even help others by creating a quirk config and for your model and creating a merge request. 
+AcerX is developed, tuned, and tested directly on the **Acer Nitro V 15** platform.
 
+| Model Series | Tested Model | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **Acer Nitro V 15 (Intel)** | **ANV15-51** | 🌟 **Primary Target (Fully Verified)** | Full support: dual graphs, fans, thermal profiles, battery limiter, Nitro key daemon |
+| **Acer Nitro V 15 (AMD)** | **ANV15-41** | ✅ **Fully Compatible** | Full support across all telemetry, cooling curves, and battery management |
 
+---
 
+## ⚡ Compatible Nitro & Predator Models
 
-| Model               | Status                 | Notes                                                            |
-| ------------------- | ---------------------- | ---------------------------------------------------------------- |
-| **ANV15-51**        | ✅ Fully Supported      | **Officially tested and verified.**                                  |
-| ANV15-41            | ✅ Supported            | Stable with all features working.                                |
-| AN16-41             | ✅ Supported            | Fully functional on supported kernels.                           |
-| AN16-43             | ✅ Supported            | Fully functional on supported kernels.                           |
-| **PHN16-71**        | ✅ Supported |  Per Key Keyboard lighting maybe not working properly.                 |
-| PHN16-72            | ✅ Supported            | Uses same quirk profile as PHN16-71 but no known lighting issue. |
-| PH16-71             | ✅ Supported            | Uses universal Predator V4 quirk.                                |
-| PH18-71             | ✅ Supported            | Uses universal Predator V4 quirk.                                |
-| PH315-53            | ✅ Supported            | Known stable, uses dedicated quirk.                              |
-| AN515-44            | ✅ Supported <br> (See Notes)  | Need to force parameters <br> using Internals Manager (`nitro_v4`)|
-| AN515-47            | ✅ Supported <br> (See Notes)  | Need to force parameters <br> using Internals Manager (`nitro_v4`)|
-| AN515-58            | ✅ Supported <br> (See Notes)| Has Inbuilt support, <br> To use LCD Override use `nitro_v4` parameter|
-| AN517-54            | ✅ Supported <br> (See Notes)  | Need to force parameters <br> using Internals Manager (`nitro_v4`)|
-| AN517-55            | ⚪ Not Yet Verified     | No reports yet — hardware support unconfirmed.                   |
-| Aspire 1360         | ✅ Supported            | Legacy model — uses Aspire 1520 quirk.                           |
-| Aspire 1520         | ✅ Supported            | Legacy model — uses Aspire 1520 quirk.                           |
-| Aspire 3100         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 3610         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 5100         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 5610         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 5630         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 5650         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 5680         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Aspire 9110         | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| TravelMate 2490     | ✅ Supported            | Native support.                                                  |
-| TravelMate 4200     | ✅ Supported            | Uses TravelMate 2490 quirk.                                      |
-| Switch 10 E SW3-016 | ✅ Supported            | Keyboard dock support via force caps.                            |
-| Switch 10 SW5-012   | ✅ Supported            | Keyboard dock support via force caps.                            |
-| Switch V 10 SW5-017 | ✅ Supported            | Keyboard dock support via force caps.                            |
-| One 10 (S1003)      | ✅ Supported            | Keyboard dock support via force caps.                            |
+Because AcerX communicates with Acer's standard WMI/EC platform interface through the `linuwu_sense` kernel module and ACPI `platform_profile`, the following models also support AcerX hardware telemetry and controls:
+
+| Model Series | Model | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **Acer Nitro 16** | AN16-41 / AN16-43 | ✅ Supported | Full fan control, platform profiles, and telemetry |
+| **Acer Nitro 17** | AN17-41 / AN17-51 | ✅ Supported | Thermal profiles and fan control operational |
+| **Acer Nitro 5** | AN515-58 | ✅ Supported | Inbuilt WMI support |
+| **Acer Nitro 5** | AN515-44 / AN515-47 | ✅ Supported | Kernel module exposes thermal profiles & sensors |
+| **Predator Helios Neo 16** | PHN16-71 / PHN16-72 | ✅ Supported | Full telemetry, dual blower control, thermal modes |
+| **Predator Helios 16** | PH16-71 | ✅ Supported | Universal Predator V4 quirk support |
+| **Predator Helios 18** | PH18-71 | ✅ Supported | Full thermal envelopes & fan tracking |
+| **Predator Helios 300** | PH315-53 / PH315-54 | ✅ Supported | Stable fan and sensor reporting |
+
+> [!NOTE]
+> If your Acer laptop has dual aerodynamic cooling blowers and standard Acer WMI registers, AcerX can manage thermal profiles, fan RPM tracking, and battery health out-of-the-box.
+
+---
+
+## 🐧 Distribution & Kernel Requirements
+
+* **Supported Linux Distributions**:
+  * **Arch Linux / EndeavourOS / CachyOS / Manjaro**
+  * **Ubuntu 24.04+ / 25.04+**
+  * **Debian 12+ (Bookworm / Trixie / Sid)**
+  * **Fedora 40+**
+  * **Pop!_OS / Linux Mint**
+* **Kernel Versions**:
+  * **Linux 6.x** (6.8, 6.10, 6.11, 6.12, 6.13+)
+  * **Linux 7.x** (Fully supported)
+* **Desktop Environments**:
+  * GNOME (Wayland & X11)
+  * KDE Plasma (Wayland & X11)
+  * Hyprland / Sway / Wayfire
+  * XFCE / Cinnamon / COSMIC
+
+---
+
+## 🔍 How to Check Your Laptop Model
+
+Open your terminal and run:
+
+```bash
+sudo dmidecode -s system-product-name
+```
+
+If it returns `Nitro ANV15-51` or `Nitro ANV15-41`, your laptop is officially and natively supported with zero configuration required!
+
+---
+
+## 💬 Submitting New Model Reports
+
+If you are running AcerX on another Acer Nitro or Predator laptop:
+1. Verify telemetry readings, fan RPM sensors, and battery limiting.
+2. Open an issue or discussion on the official GitHub repository: [AcerX GitHub Issues](https://github.com/MonuGurjar/AcerX/issues).

@@ -63,23 +63,23 @@ AcerX/
 * **High-Visibility Status**: Real-time synchronized active profile highlights across the headerbar and telemetry cards.
 * **Automatic Power State Adaptation**: Respects AC adapter connection and battery states.
 
-### 📈 Smooth Multi-Metric Live Telemetry Graphs
-* **SVG Fluid Animations**: Hardware telemetry curves interpolate seamlessly across incoming data points with dynamic bezier morphing.
-* **4-Metric Switcher**: Toggle individual graphs on both CPU and GPU cards between:
-  * **Load / Usage** (`%`)
-  * **Clock Speed** (`GHz` / `MHz`)
-  * **Temperature** (`°C`)
-  * **Power Draw** (`W`)
-* **Interactive Quick-Select**: Click directly on any metric summary box or pill button to switch graph modes instantly.
-* **Live Pulsing Coordinate Beacons**: Real-time pulse indicator marking the leading edge of live readings.
+### 📈 Smooth Simultaneous Dual Telemetry Graphs
+* **Simultaneous Dual Graphs**: Real-time independent SVG sparkline graphs for both CPU and GPU:
+  * **Load / Usage Graph**: Smooth real-time utilization % tracking with dynamic fill gradients.
+  * **Temperature Graph**: Dedicated thermal curves tracking °C with live coordinate beacons.
+* **GPU Memory Monitor**: Live VRAM allocation tracking (Used / Total MB) displayed directly on the dedicated GPU card.
+* **Secondary Telemetry Grid**:
+  * **RAM Usage**: Real-time memory consumption (GB) and utilization percentage.
+  * **NVMe Storage Usage**: Primary root filesystem disk allocation and usage metric.
+  * **Intel iGPU Monitor**: Full-width hardware monitor card for Intel Xe / UHD integrated graphics, styled symmetrically to the NVIDIA GPU.
 
-### 🔋 Battery Care & Health
-* **80% Battery Care Limiter**: Caps AC charging at 80% to dramatically extend lithium battery chemical longevity.
-* **Battery Gauge Calibration**: Automated discharge and recharge cycle management to re-zero battery fuel gauge hardware.
-* **USB Power-Off Charging**: Configure external device charging while the laptop is suspended or shut down.
+### 🔋 Dedicated Battery Care Tab
+* **80% Battery Health Limiter**: Caps AC charging at 80% via ACPI EC registers to prevent battery degradation during prolonged plugged-in use.
+* **Battery Gauge Calibration**: Automated full cycle calibration mode to re-zero hardware gas gauge sensors.
+* **USB Power-Off Charging**: Toggle external 5V USB power delivery when the laptop is suspended or shut down.
 
-### 🎨 RGB Keyboard & Hardware Customization
-* **Backlight Timeout Control**: Disable or customize keyboard illumination timeouts.
+### 🎨 Hardware Customization
+* **Backlight Timeout Control**: Disable or customize 30s keyboard illumination timeouts.
 * **LCD Display Overdrive**: Toggle high-response panel overdrive directly through ACPI firmware.
 * **Boot Animation & Sound**: Enable or silence Acer BIOS boot chimes and splash sequences.
 
@@ -131,7 +131,7 @@ wget https://github.com/MonuGurjar/AcerX/releases/latest/download/AcerX-NitroV15
 tar -xvf AcerX-NitroV15-v0.1.0-linux-x86_64.tar.gz
 cd AcerX-NitroV15-v0.1.0-linux-x86_64
 
-# 2. Run the installer (pre-compiled binaries are copied directly into place)
+# 2. Run the installer (interactive Nitro key detection included!)
 sudo ./install.sh
 ```
 
@@ -149,46 +149,11 @@ sudo ./install.sh
 
 The script will automatically:
 1. Build and install the `linuwu_sense` kernel module (compatible with Linux 6.x and 7.x kernels).
-2. Configure module autoloading on boot and blacklist conflicting stock modules.
+2. Configure module autoloading on boot (`/etc/modules-load.d/linuwu_sense.conf`).
 3. Build and install the `void-controld` daemon with auto-restart systemd unit (`acerx.service`).
-4. Install the `acer-x` desktop binary into `/usr/local/bin/acer-x`.
-5. Register desktop launcher files and system icons in `/usr/share/applications/` and `/usr/share/icons/hicolor/`.
-
----
-
-### Option 3: Building From Source Manually
-
-#### Prerequisites
-* **Arch / Manjaro / CachyOS**:
-  ```bash
-  sudo pacman -S base-devel linux-headers rust cargo nodejs npm webkit2gtk-4.1
-  ```
-* **Ubuntu / Debian / Pop!_OS**:
-  ```bash
-  sudo apt install build-essential linux-headers-$(uname -r) cargo nodejs npm libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
-  ```
-* **Fedora**:
-  ```bash
-  sudo dnf install @development-tools kernel-devel cargo nodejs npm webkit2gtk4.1-devel
-  ```
-
-#### Step-by-Step Build
-```bash
-# 1. Driver
-cd driver && make && sudo make install && sudo modprobe linuwu_sense && cd ..
-
-# 2. Daemon
-cd daemon && cargo build --release
-sudo install -m 755 target/release/void-controld /usr/local/bin/void-controld
-sudo install -m 644 void-controld.service /etc/systemd/system/acerx.service
-sudo systemctl daemon-reload && sudo systemctl enable --now acerx.service
-cd ..
-
-# 3. Desktop Application
-cd app && npm install && npm run build && npx tauri build --no-bundle
-sudo install -m 755 src-tauri/target/release/acer-x /usr/local/bin/acer-x
-cd ..
-```
+4. Interactively detect and register your physical hardware **Nitro** key (`acerx-nitrokey.service`).
+5. Install the `acer-x` desktop binary into `/usr/local/bin/acer-x`.
+6. Register desktop launcher files and system icons in `/usr/share/applications/` and `/usr/share/icons/hicolor/`.
 
 ---
 
@@ -200,11 +165,11 @@ acer-x
 ```
 
 ### Dedicated Nitro / Predator Key
-On Acer laptops, the dedicated **N** key (Nitro) or **PredatorSense** key sends scancode `0xf5` (mapped to Linux keycode `425` or `prog1`).
-You can bind this key in your desktop settings (GNOME Settings $\rightarrow$ Keyboard $\rightarrow$ Custom Shortcuts, or in KDE / Hyprland / Sway) to run:
+During installation, AcerX offers interactive one-key configuration. If you ever need to reconfigure or change your physical key binding:
 ```bash
-/usr/local/bin/acer-x
+sudo /usr/local/share/acerx/scripts/nitro-key-detection.sh
 ```
+The background daemon `acerx-nitrokey.service` will automatically launch or focus AcerX whenever the physical **N** / **Predator** key is pressed!
 
 ---
 
@@ -217,33 +182,20 @@ sudo ./uninstall.sh
 
 ---
 
-## 🛠️ What I Built & Changed in AcerX
+## 🛠️ Built for Production
 
-AcerX builds upon open-source foundations, introducing a complete architectural, performance, and UI overhaul tailored specifically for the Acer Nitro V 15:
-
-* **Acer Nitro V 15 Specialization**: Tuned fan duty curves, platform power envelopes, and register behaviors specifically for the Acer Nitro V 15 hardware.
-* **Tauri v2 + React 19 Client**: Re-engineered the desktop interface from scratch with Tauri v2, React 19, TypeScript, and Tailwind CSS, running with an ultra-lightweight memory footprint under 35MB RAM.
-* **Single-Binary Rust Hardware Daemon (`void-controld`)**: Built a high-performance, memory-safe compiled Rust daemon that runs as a systemd service consuming under 3MB RAM, communicating over high-speed Unix Domain Sockets (`/tmp/acerx.sock`).
-* **Cyberpunk Frosted Glassmorphism UI**: Designed a custom visual experience with translucent backdrop-filter glass cards, mountain atmospheric wallpaper depth, and custom sidebar artwork (`sidebaar-bg.png`).
-* **Live 60 FPS Telemetry Sparklines**: Added real-time SVG bezier curves with coordinate beacons for CPU and GPU, supporting instant switching between Load, Clock Speed, Temperature, and Package Power Draw (Watts via RAPL).
-* **Dual Turbine Fan Controls**: Created aerodynamic RPM tachometers, manual duty target sliders, and quick-toggle Quiet Profile modes.
+* **Tailored for Acer Nitro V 15**: Tuned fan duty curves, platform power envelopes, and register behaviors specifically for Acer Nitro V 15 hardware (`ANV15-51` / `ANV15-41`).
+* **Tauri v2 + React 19 Client**: Re-engineered desktop interface with Tauri v2, React 19, TypeScript, and Tailwind CSS (<35MB RAM).
+* **Single-Binary Rust Hardware Daemon (`void-controld`)**: High-performance, memory-safe compiled Rust daemon running as a systemd service consuming under 3MB RAM, communicating over high-speed Unix Domain Sockets (`/tmp/acerx.sock`).
+* **Simultaneous Dual Graphs**: Real-time CPU & GPU telemetry with live Load and Temperature SVG sparklines.
+* **Full Telemetry Suite**: RAM, NVMe disk, and symmetric Intel iGPU telemetry cards.
+* **Dedicated Battery Care**: 80% charge limiter and battery calibration.
 
 ---
 
-## 🤝 Credits & Acknowledgements
+## 👤 Author
 
-AcerX is made possible thanks to the foundational engineering, reverse-engineering and validation efforts of the following contributors:
-
-### 🏛️ Core Upstream Engineering
-* **[Divyansh (PXDiv)](https://github.com/PXDiv)** — *Creator of [Div Acer Manager Max (DAMX)](https://github.com/PXDiv/Div-Acer-Manager-Max)*
-  * Architected the initial Linux management suite for Acer laptops, reverse-engineered the dedicated Nitro key scancode protocol (`0xf5`), and established the baseline platform control logic.
-
-* **[0x7375646F](https://github.com/0x7375646F)** — *Creator of the [Linuwu-Sense](https://github.com/0x7375646F/Linuwu-Sense) Kernel Driver*
-  * Reverse-engineered proprietary Acer PredatorSense & NitroSense ACPI/WMI interfaces, authoring the Linux kernel sysfs driver that exposes low-level thermal profiles, dual blower tachometers, RGB keyboard buses, and battery management.
-
-### 🧪 Testing
-* **[hridaycode1119](https://github.com/hridaycode1119)** — *QA Testing*
-  * Conducted telemetry verification, and thermal/fan curve testing specifically on the **Acer Nitro V 15**.
+Developed and maintained by **[Monu Gurjar](https://github.com/MonuGurjar)**.
 
 ---
 
