@@ -57,37 +57,22 @@ AcerX/
 
 ---
 
+## 📚 Quick Documentation Links
+
+* 💻 [**Hardware Compatibility Guide (Compatibility.md)**](Compatibility.md) — Supported Acer models, tested kernels (6.x & 7.x), and platform registers.
+* ❓ [**Frequently Asked Questions (FAQ.md)**](FAQ.md) — Nitro key detection, daemon persistence, Secure Boot MOK signing, and troubleshooting.
+* ⚡ [**AcerX vs. DAMX Architectural Comparison (AcerX_vs_DAMX.md)**](AcerX_vs_DAMX.md) — In-depth benchmark and feature differences.
+
+---
+
 ## ✨ Features
 
-### 🌀 Aerodynamic Fan & Cooling Control
-* **Dual Turbine Visualizer**: Real-time RPM tracking for CPU and GPU aerodynamic blower arrays.
-* **Manual PWM Curves & Auto Dynamic**: Slide duty cycle targets directly or let the dynamic EC thermal curve manage fans automatically.
-* **Quiet Profile Switch**: One-click toggle for acoustic-first operation.
-
-### ⚡ ACPI Thermal & Performance Profiles
-* **Normalized Envelopes**: Full hardware support for **Eco** (`low-power`), **Silent** (`quiet`), **Balanced**, **Performance** (`balanced-performance`), and **Turbo**.
-* **High-Visibility Status**: Real-time synchronized active profile highlights across the headerbar and telemetry cards.
-* **Automatic Power State Adaptation**: Respects AC adapter connection and battery states.
-
-### 📈 Smooth Simultaneous Dual Telemetry Graphs
-* **Simultaneous Dual Graphs**: Real-time independent SVG sparkline graphs for both CPU and GPU:
-  * **Load / Usage Graph**: Smooth real-time utilization % tracking with dynamic fill gradients.
-  * **Temperature Graph**: Dedicated thermal curves tracking °C with live coordinate beacons.
-* **GPU Memory Monitor**: Live VRAM allocation tracking (Used / Total MB) displayed directly on the dedicated GPU card.
-* **Secondary Telemetry Grid**:
-  * **RAM Usage**: Real-time memory consumption (GB) and utilization percentage.
-  * **NVMe Storage Usage**: Primary root filesystem disk allocation and usage metric.
-  * **Intel iGPU Monitor**: Full-width hardware monitor card for Intel Xe / UHD integrated graphics, styled symmetrically to the NVIDIA GPU.
-
-### 🔋 Dedicated Battery Care Tab
-* **80% Battery Health Limiter**: Caps AC charging at 80% via ACPI EC registers to prevent battery degradation during prolonged plugged-in use.
-* **Battery Gauge Calibration**: Automated full cycle calibration mode to re-zero hardware gas gauge sensors.
-* **USB Power-Off Charging**: Toggle external 5V USB power delivery when the laptop is suspended or shut down.
-
-### 🎨 Hardware Customization
-* **Backlight Timeout Control**: Disable or customize 30s keyboard illumination timeouts.
-* **LCD Display Overdrive**: Toggle high-response panel overdrive directly through ACPI firmware.
-* **Boot Animation & Sound**: Enable or silence Acer BIOS boot chimes and splash sequences.
+* 🌀 **Aerodynamic Cooling**: Live dual-blower RPM tachometers, dynamic EC auto-curves, and custom manual PWM duty sliders.
+* ⚡ **ACPI Thermal Envelopes**: Instant switching between **Eco**, **Quiet**, **Balanced**, **Performance**, and **Turbo**.
+* 📈 **Simultaneous Dual Graphs**: Real-time independent 60 FPS SVG sparklines tracking **Load (%)** and **Temperature (°C)** concurrently.
+* 📊 **Unified Telemetry Suite**: RAM utilization, NVMe disk metrics, GPU VRAM allocation, and dedicated NVIDIA-style Intel iGPU monitor card.
+* 🔋 **Dedicated Battery Care**: Hardware 80% charge limiter to preserve battery longevity, gauge calibration, and USB power-off charging.
+* 🎨 **Hardware Customization**: 3ms LCD overdrive toggle, keyboard illumination timeout (30s), and BIOS boot chime controls.
 
 ---
 
