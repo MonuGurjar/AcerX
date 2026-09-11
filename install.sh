@@ -68,7 +68,7 @@ if [ -d "daemon" ]; then
     echo -e "${GREEN}✓ void-controld daemon installed and running on /tmp/acerx.sock.${NC}"
 fi
 
-echo -e "${CYAN}[3/5] Building and Installing AcerX Desktop Application...${NC}"
+echo -e "${CYAN}[3/6] Building and Installing AcerX Desktop Application...${NC}"
 if [ -d "app" ]; then
     if [ ! -f "app/src-tauri/target/release/acer-x" ]; then
         echo "Building desktop UI frontend and Tauri binary..."
@@ -78,7 +78,67 @@ if [ -d "app" ]; then
     echo -e "${GREEN}✓ acer-x binary installed to /usr/local/bin/acer-x.${NC}"
 fi
 
-echo -e "${CYAN}[4/5] Registering Desktop Launcher & System Icons...${NC}"
+echo -e "${CYAN}[4/6] Registering Dedicated Nitro / Predator Key Listener...${NC}"
+# Automatically install evtest if missing (required for hardware key event detection)
+if ! command -v evtest >/dev/null 2>&1; then
+    echo "Installing evtest dependency for hardware key detection..."
+    if command -v pacman >/dev/null 2>&1; then
+        pacman -S --noconfirm evtest >/dev/null 2>&1 || true
+    elif command -v apt-get >/dev/null 2>&1; then
+        apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq evtest >/dev/null 2>&1 || true
+    elif command -v dnf >/dev/null 2>&1; then
+        dnf install -y -q evtest >/dev/null 2>&1 || true
+    elif command -v zypper >/dev/null 2>&1; then
+        zypper install -y evtest >/dev/null 2>&1 || true
+    fi
+fi
+
+# Configure /etc/acerx/nitro_key.conf
+mkdir -p /etc/acerx
+if [ ! -f "/etc/acerx/nitro_key.conf" ]; then
+    cat << 'KEY_CONF' > /etc/acerx/nitro_key.conf
+# Acer Nitro / Predator Dedicated Key Configuration
+# Default evdev Linux keycode for NitroSense button is 425
+NITRO_KEY=425
+KEY_CONF
+    chmod 644 /etc/acerx/nitro_key.conf
+fi
+
+# Install key listener executable
+if [ -f "scripts/nitro-key-detection.sh" ]; then
+    install -m 755 scripts/nitro-key-detection.sh /usr/local/bin/acerx-nitrokey
+fi
+
+# Install and enable systemd service unit
+if [ -f "scripts/acerx-nitrokey.service" ]; then
+    install -m 644 scripts/acerx-nitrokey.service /etc/systemd/system/acerx-nitrokey.service
+else
+    cat << 'SERVICE_EOF' > /etc/systemd/system/acerx-nitrokey.service
+[Unit]
+Description=AcerX Nitro / Predator Dedicated Key Listener
+After=multi-user.target graphical.target acerx.service
+Wants=acerx.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/acerx-nitrokey
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+SERVICE_EOF
+    chmod 644 /etc/systemd/system/acerx-nitrokey.service
+fi
+
+systemctl daemon-reload
+systemctl enable acerx-nitrokey.service >/dev/null 2>&1 || true
+systemctl restart acerx-nitrokey.service >/dev/null 2>&1 || true
+echo -e "${GREEN}✓ Nitro key listener service installed and active.${NC}"
+
+echo -e "${CYAN}[5/6] Registering Desktop Launcher & System Icons...${NC}"
 mkdir -p /usr/share/applications
 cat << 'DESKTOP_EOF' > /usr/share/applications/acer-x.desktop
 [Desktop Entry]
@@ -111,7 +171,7 @@ gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
 update-desktop-database /usr/share/applications/ >/dev/null 2>&1 || true
 echo -e "${GREEN}✓ System desktop entry and high-resolution icons registered.${NC}"
 
-echo -e "${CYAN}[5/5] Verification & Health Check...${NC}"
+echo -e "${CYAN}[6/6] Verification & Health Check...${NC}"
 sleep 1
 if pgrep -x "void-controld" >/dev/null 2>&1; then
     echo -e "${GREEN}✓ Daemon is active and operational.${NC}"
@@ -125,6 +185,10 @@ else
     echo -e "${YELLOW}[!] Warning: linuwu_sense driver not found in lsmod.${NC}"
 fi
 
+if systemctl is-active --quiet acerx-nitrokey.service 2>/dev/null; then
+    echo -e "${GREEN}✓ acerx-nitrokey key listener service is active.${NC}"
+fi
+
 echo ""
 echo -e "${GREEN}${BOLD}========================================================================${NC}"
 echo -e "${GREEN}${BOLD}  AcerX Installation Complete!${NC}"
@@ -132,5 +196,5 @@ echo -e "${CYAN}  Created by Monu Gurjar (https://github.com/MonuGurjar)${NC}"
 echo -e "${GREEN}${BOLD}========================================================================${NC}"
 echo -e "Launch AcerX by typing:"
 echo -e "  ${CYAN}acer-x${NC}"
-echo -e "or open ${CYAN}AcerX${NC} from your desktop application launcher."
+echo -e "or press the dedicated ${CYAN}Nitro / PredatorSense${NC} key on your keyboard."
 echo ""

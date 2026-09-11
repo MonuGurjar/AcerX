@@ -50,6 +50,11 @@ cp driver/src/*.h "${DIST_DIR}/driver/src/" 2>/dev/null || true
 
 # 5. Copy installation scripts, configs & assets
 echo "[+] Copying scripts and assets..."
+mkdir -p "${DIST_DIR}/scripts"
+cp scripts/nitro-key-detection.sh "${DIST_DIR}/scripts/"
+cp scripts/acerx-nitrokey.service "${DIST_DIR}/scripts/" 2>/dev/null || true
+chmod +x "${DIST_DIR}/scripts/"*
+
 cp install.sh "${DIST_DIR}/"
 cp uninstall.sh "${DIST_DIR}/"
 cp README.md "${DIST_DIR}/"

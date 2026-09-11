@@ -18,13 +18,14 @@ fi
 echo -e "${RED}${BOLD}Stopping and removing AcerX components...${NC}"
 
 # Stop and disable daemon services
-systemctl stop acerx.service void-controld.service 2>/dev/null || true
-systemctl disable acerx.service void-controld.service 2>/dev/null || true
-rm -f /etc/systemd/system/acerx.service /etc/systemd/system/void-controld.service
+systemctl stop acerx.service void-controld.service acerx-nitrokey.service 2>/dev/null || true
+systemctl disable acerx.service void-controld.service acerx-nitrokey.service 2>/dev/null || true
+rm -f /etc/systemd/system/acerx.service /etc/systemd/system/void-controld.service /etc/systemd/system/acerx-nitrokey.service
 systemctl daemon-reload
 
-# Remove system binaries
-rm -f /usr/local/bin/void-controld /usr/local/bin/acer-x
+# Remove system binaries and configs
+rm -f /usr/local/bin/void-controld /usr/local/bin/acer-x /usr/local/bin/acerx-nitrokey
+rm -rf /etc/acerx
 
 # Remove desktop entry and icons
 rm -f /usr/share/applications/acer-x.desktop /usr/share/pixmaps/acer-x.png
