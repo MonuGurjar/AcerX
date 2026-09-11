@@ -232,7 +232,7 @@ AcerX builds upon open-source foundations, introducing a complete architectural,
 
 ## 🤝 Credits & Acknowledgements
 
-AcerX is made possible thanks to the foundational engineering, reverse-engineering discoveries, and validation efforts of the following contributors:
+AcerX is made possible thanks to the foundational engineering, reverse-engineering and validation efforts of the following contributors:
 
 ### 🏛️ Core Upstream Engineering
 * **[Divyansh (PXDiv)](https://github.com/PXDiv)** — *Creator of [Div Acer Manager Max (DAMX)](https://github.com/PXDiv/Div-Acer-Manager-Max)*
@@ -241,9 +241,9 @@ AcerX is made possible thanks to the foundational engineering, reverse-engineeri
 * **[0x7375646F](https://github.com/0x7375646F)** — *Creator of the [Linuwu-Sense](https://github.com/0x7375646F/Linuwu-Sense) Kernel Driver*
   * Reverse-engineered proprietary Acer PredatorSense & NitroSense ACPI/WMI interfaces, authoring the Linux kernel sysfs driver that exposes low-level thermal profiles, dual blower tachometers, RGB keyboard buses, and battery management.
 
-### 🧪 Hardware Testing & Quality Assurance
-* **[hridaycode1119](https://github.com/hridaycode1119)** — *Hardware Validation & QA Testing*
-  * Conducted hardware validation, telemetry verification, and thermal/fan curve testing specifically on the **Acer Nitro V 15**.
+### 🧪 Testing
+* **[hridaycode1119](https://github.com/hridaycode1119)** — *QA Testing*
+  * Conducted telemetry verification, and thermal/fan curve testing specifically on the **Acer Nitro V 15**.
 
 ---
 
