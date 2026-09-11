@@ -8,6 +8,8 @@ interface SparklineProps {
   max?: number;
   unit?: string;
   showMinMax?: boolean;
+  className?: string;
+  height?: number;
 }
 
 export const Sparkline: React.FC<SparklineProps> = ({
@@ -18,15 +20,16 @@ export const Sparkline: React.FC<SparklineProps> = ({
   max = 100,
   unit = "",
   showMinMax = true,
+  className = "h-20",
+  height = 70,
 }) => {
   const gradientId = useId();
 
   if (!data || data.length < 2) {
-    return <div className="h-20 w-full" />;
+    return <div className={`${className} w-full`} />;
   }
 
   const width = 300;
-  const height = 70;
   const stepX = width / (data.length - 1);
   const range = max - min || 1;
 
@@ -54,7 +57,7 @@ export const Sparkline: React.FC<SparklineProps> = ({
   const areaD = `${pathD} L ${width},${height} L 0,${height} Z`;
 
   return (
-    <div className="h-20 w-full relative flex items-end select-none overflow-hidden rounded-md bg-zinc-950/20 border border-zinc-800/40">
+    <div className={`${className} w-full relative flex items-end select-none overflow-hidden rounded-md bg-zinc-950/20 border border-zinc-800/40`}>
       {/* Dynamic Max/Min scale watermarks on right edge */}
       {showMinMax && (
         <div className="absolute right-1.5 inset-y-1 flex flex-col justify-between items-end pointer-events-none z-10 text-[9px] font-mono text-zinc-400 font-medium">

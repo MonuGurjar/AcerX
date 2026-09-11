@@ -7,23 +7,14 @@ interface DashboardProps {
   metrics: SystemMetrics | null;
 }
 
-export type TelemetryMetric = "load" | "clock" | "temp" | "power";
-
 export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
-  const [cpuMetric, setCpuMetric] = useState<TelemetryMetric>("load");
-  const [gpuMetric, setGpuMetric] = useState<TelemetryMetric>("load");
-
   // CPU metric histories (constant length 20 for silky smooth SVG morphing)
   const [cpuLoadHistory, setCpuLoadHistory] = useState<number[]>(() => Array(20).fill(30));
-  const [cpuClockHistory, setCpuClockHistory] = useState<number[]>(() => Array(20).fill(2.5));
   const [cpuTempHistory, setCpuTempHistory] = useState<number[]>(() => Array(20).fill(55));
-  const [cpuPowerHistory, setCpuPowerHistory] = useState<number[]>(() => Array(20).fill(35));
 
   // GPU metric histories
   const [gpuLoadHistory, setGpuLoadHistory] = useState<number[]>(() => Array(20).fill(20));
-  const [gpuClockHistory, setGpuClockHistory] = useState<number[]>(() => Array(20).fill(800));
   const [gpuTempHistory, setGpuTempHistory] = useState<number[]>(() => Array(20).fill(50));
-  const [gpuPowerHistory, setGpuPowerHistory] = useState<number[]>(() => Array(20).fill(40));
 
   const [cpuFanTarget, setCpuFanTarget] = useState<number>(0);
   const [gpuFanTarget, setGpuFanTarget] = useState<number>(0);
@@ -32,14 +23,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
   useEffect(() => {
     if (metrics) {
       setCpuLoadHistory((prev) => [...prev.slice(1), metrics.cpu.utilization_percent]);
-      setCpuClockHistory((prev) => [...prev.slice(1), metrics.cpu.clock_ghz]);
       setCpuTempHistory((prev) => [...prev.slice(1), metrics.cpu.temp_celsius]);
-      setCpuPowerHistory((prev) => [...prev.slice(1), metrics.cpu.power_watts]);
 
       setGpuLoadHistory((prev) => [...prev.slice(1), metrics.gpu.utilization_percent]);
-      setGpuClockHistory((prev) => [...prev.slice(1), metrics.gpu.core_clock_mhz]);
       setGpuTempHistory((prev) => [...prev.slice(1), metrics.gpu.temp_celsius]);
-      setGpuPowerHistory((prev) => [...prev.slice(1), metrics.gpu.power_watts]);
 
       if (metrics.fans) {
         if (metrics.fans.cpu_duty !== undefined) {
@@ -78,101 +65,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
     gpu_is_auto: true,
     gpu_duty: 0,
   };
-
-  const getCpuMetricConfig = () => {
-    switch (cpuMetric) {
-      case "clock":
-        return {
-          label: "Clock Speed",
-          currentValue: `${cpu.clock_ghz.toFixed(2)} GHz`,
-          history: cpuClockHistory,
-          min: 0,
-          max: Math.max(5.0, Math.ceil(cpu.clock_ghz + 0.5)),
-          unit: "GHz",
-          color: "#38bdf8",
-        };
-      case "temp":
-        return {
-          label: "Temperature",
-          currentValue: `${cpu.temp_celsius.toFixed(0)}°C`,
-          history: cpuTempHistory,
-          min: 30,
-          max: 105,
-          unit: "°C",
-          color: "#f87171",
-        };
-      case "power":
-        return {
-          label: "Power Draw",
-          currentValue: `${cpu.power_watts.toFixed(0)} W`,
-          history: cpuPowerHistory,
-          min: 0,
-          max: Math.max(100, Math.ceil(cpu.power_watts + 15)),
-          unit: "W",
-          color: "#fbbf24",
-        };
-      case "load":
-      default:
-        return {
-          label: "Load / Usage",
-          currentValue: `${cpu.utilization_percent.toFixed(0)}%`,
-          history: cpuLoadHistory,
-          min: 0,
-          max: 100,
-          unit: "%",
-          color: "#2dd4bf",
-        };
-    }
-  };
-
-  const getGpuMetricConfig = () => {
-    switch (gpuMetric) {
-      case "clock":
-        return {
-          label: "Core Clock",
-          currentValue: `${gpu.core_clock_mhz.toFixed(0)} MHz`,
-          history: gpuClockHistory,
-          min: 0,
-          max: Math.max(2600, Math.ceil(gpu.core_clock_mhz + 200)),
-          unit: "MHz",
-          color: "#38bdf8",
-        };
-      case "temp":
-        return {
-          label: "Temperature",
-          currentValue: `${gpu.temp_celsius.toFixed(0)}°C`,
-          history: gpuTempHistory,
-          min: 30,
-          max: 100,
-          unit: "°C",
-          color: "#f87171",
-        };
-      case "power":
-        return {
-          label: "Power Draw",
-          currentValue: `${gpu.power_watts.toFixed(0)} W`,
-          history: gpuPowerHistory,
-          min: 0,
-          max: Math.max(140, Math.ceil(gpu.power_watts + 20)),
-          unit: "W",
-          color: "#fbbf24",
-        };
-      case "load":
-      default:
-        return {
-          label: "Load / Usage",
-          currentValue: `${gpu.utilization_percent.toFixed(0)}%`,
-          history: gpuLoadHistory,
-          min: 0,
-          max: 100,
-          unit: "%",
-          color: "#06b6d4",
-        };
-    }
-  };
-
-  const cpuConfig = getCpuMetricConfig();
-  const gpuConfig = getGpuMetricConfig();
 
   // Hardware max RPM: CPU blower reaches ~8100 RPM, GPU blower reaches ~7500 RPM on full 100% duty
   const cpuPct = Math.min(Math.max(Math.round((fans.cpu_rpm / 8100) * 100), fans.cpu_rpm > 0 ? 5 : 0), 100);
@@ -223,135 +115,91 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
             </div>
           </div>
 
-          {/* Crisp Glass Metric Grid (Clickable to switch graph view) */}
+          {/* Crisp Glass Metric Grid */}
           <div className="grid grid-cols-4 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
-            <button
-              type="button"
-              onClick={() => setCpuMetric("clock")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                cpuMetric === "clock"
-                  ? "bg-sky-950/60 border border-sky-400/50 shadow-sm ring-1 ring-sky-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${cpuMetric === "clock" ? "text-sky-400" : "text-zinc-400"}`}>Clock</span>
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-sky-400">Clock</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {cpu.clock_ghz.toFixed(2)}
                 </span>
                 <span className="text-[10px] text-zinc-400">GHz</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setCpuMetric("load")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                cpuMetric === "load"
-                  ? "bg-teal-950/60 border border-teal-400/50 shadow-sm ring-1 ring-teal-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${cpuMetric === "load" ? "text-teal-400" : "text-zinc-400"}`}>Load</span>
+            <div className="p-1.5 rounded-md text-left bg-teal-950/40 border border-teal-500/20">
+              <span className="text-[10px] font-medium block text-teal-400">Load</span>
               <div className="flex items-baseline mt-0.5">
                 <span className="text-base font-bold tracking-tight text-gnome-accent">
                   {cpu.utilization_percent.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-gnome-accent font-medium ml-0.5">%</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setCpuMetric("temp")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                cpuMetric === "temp"
-                  ? "bg-rose-950/60 border border-rose-400/50 shadow-sm ring-1 ring-rose-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${cpuMetric === "temp" ? "text-rose-400" : "text-zinc-400"}`}>Temp</span>
+            <div className="p-1.5 rounded-md text-left bg-rose-950/40 border border-rose-500/20">
+              <span className="text-[10px] font-medium block text-rose-400">Temp</span>
               <div className="flex items-baseline mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {cpu.temp_celsius.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-zinc-400 ml-0.5">°C</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setCpuMetric("power")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                cpuMetric === "power"
-                  ? "bg-amber-950/60 border border-amber-400/50 shadow-sm ring-1 ring-amber-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${cpuMetric === "power" ? "text-amber-400" : "text-zinc-400"}`}>Power</span>
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-amber-400">Power</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {cpu.power_watts.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-zinc-400">W</span>
               </div>
-            </button>
+            </div>
           </div>
 
-          {/* Graph View Selector & Real-Time Label */}
-          <div className="flex items-center justify-between mb-1.5 px-0.5">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400">
-                Graph:
-              </span>
-              <div className="inline-flex glass-tile-inset p-0.5 rounded-md gap-0.5">
-                {[
-                  { id: "load", label: "Load" },
-                  { id: "clock", label: "Clock" },
-                  { id: "temp", label: "Temp" },
-                  { id: "power", label: "Power" },
-                ].map((btn) => {
-                  const isActive = cpuMetric === btn.id;
-                  return (
-                    <button
-                      key={btn.id}
-                      type="button"
-                      onClick={() => setCpuMetric(btn.id as TelemetryMetric)}
-                      className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all focus:outline-none ${
-                        isActive
-                          ? "bg-white/[0.14] text-teal-300 font-semibold shadow-sm border border-teal-400/40 backdrop-blur-sm"
-                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      {btn.label}
-                    </button>
-                  );
-                })}
+          {/* Dual Side-by-Side Half-Size Graphs: Load & Temperature */}
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            {/* CPU Load Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">CPU Load</span>
+                <span className="font-mono font-bold text-teal-300">
+                  {cpu.utilization_percent.toFixed(0)}%
+                </span>
               </div>
+              <Sparkline
+                data={cpuLoadHistory}
+                strokeColor="#2dd4bf"
+                gradientColor="#2dd4bf"
+                min={0}
+                max={100}
+                unit="%"
+                className="h-14"
+                height={50}
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px]">
-              <span className="text-[10px] text-zinc-400 font-sans">
-                {cpuConfig.label}:
-              </span>
-              <span
-                className="font-mono font-bold text-xs"
-                style={{ color: cpuConfig.color }}
-              >
-                {cpuConfig.currentValue}
-              </span>
+            {/* CPU Temp Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">CPU Temp</span>
+                <span className="font-mono font-bold text-rose-400">
+                  {cpu.temp_celsius.toFixed(0)}°C
+                </span>
+              </div>
+              <Sparkline
+                data={cpuTempHistory}
+                strokeColor="#f87171"
+                gradientColor="#f87171"
+                min={30}
+                max={105}
+                unit="°C"
+                className="h-14"
+                height={50}
+              />
             </div>
           </div>
-
-          {/* CPU Sparkline with smooth animation and dynamic scaling */}
-          <Sparkline
-            data={cpuConfig.history}
-            strokeColor={cpuConfig.color}
-            gradientColor={cpuConfig.color}
-            min={cpuConfig.min}
-            max={cpuConfig.max}
-            unit={cpuConfig.unit}
-          />
         </section>
 
         {/* GPU Card */}
@@ -381,135 +229,91 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
             </div>
           </div>
 
-          {/* Crisp Glass Metric Grid (Clickable to switch graph view) */}
+          {/* Crisp Glass Metric Grid */}
           <div className="grid grid-cols-4 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
-            <button
-              type="button"
-              onClick={() => setGpuMetric("clock")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                gpuMetric === "clock"
-                  ? "bg-sky-950/60 border border-sky-400/50 shadow-sm ring-1 ring-sky-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${gpuMetric === "clock" ? "text-sky-400" : "text-zinc-400"}`}>Clock</span>
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-sky-400">Clock</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {gpu.core_clock_mhz.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-zinc-400">MHz</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setGpuMetric("load")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                gpuMetric === "load"
-                  ? "bg-cyan-950/60 border border-cyan-400/50 shadow-sm ring-1 ring-cyan-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${gpuMetric === "load" ? "text-cyan-400" : "text-zinc-400"}`}>Load</span>
+            <div className="p-1.5 rounded-md text-left bg-cyan-950/40 border border-cyan-500/20">
+              <span className="text-[10px] font-medium block text-cyan-400">Load</span>
               <div className="flex items-baseline mt-0.5">
                 <span className="text-base font-bold tracking-tight text-cyan-400">
                   {gpu.utilization_percent.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-cyan-400 font-medium ml-0.5">%</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setGpuMetric("temp")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                gpuMetric === "temp"
-                  ? "bg-rose-950/60 border border-rose-400/50 shadow-sm ring-1 ring-rose-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${gpuMetric === "temp" ? "text-rose-400" : "text-zinc-400"}`}>Temp</span>
+            <div className="p-1.5 rounded-md text-left bg-rose-950/40 border border-rose-500/20">
+              <span className="text-[10px] font-medium block text-rose-400">Temp</span>
               <div className="flex items-baseline mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {gpu.temp_celsius.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-zinc-400 ml-0.5">°C</span>
               </div>
-            </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setGpuMetric("power")}
-              className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
-                gpuMetric === "power"
-                  ? "bg-amber-950/60 border border-amber-400/50 shadow-sm ring-1 ring-amber-400/30 backdrop-blur-sm"
-                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
-              }`}
-            >
-              <span className={`text-[10px] font-medium block ${gpuMetric === "power" ? "text-amber-400" : "text-zinc-400"}`}>Power</span>
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-amber-400">Power</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
                 <span className="text-base font-bold tracking-tight text-zinc-100">
                   {gpu.power_watts.toFixed(0)}
                 </span>
                 <span className="text-[10px] text-zinc-400">W</span>
               </div>
-            </button>
+            </div>
           </div>
 
-          {/* Graph View Selector & Real-Time Label */}
-          <div className="flex items-center justify-between mb-1.5 px-0.5">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400">
-                Graph:
-              </span>
-              <div className="inline-flex glass-tile-inset p-0.5 rounded-md gap-0.5">
-                {[
-                  { id: "load", label: "Load" },
-                  { id: "clock", label: "Clock" },
-                  { id: "temp", label: "Temp" },
-                  { id: "power", label: "Power" },
-                ].map((btn) => {
-                  const isActive = gpuMetric === btn.id;
-                  return (
-                    <button
-                      key={btn.id}
-                      type="button"
-                      onClick={() => setGpuMetric(btn.id as TelemetryMetric)}
-                      className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all focus:outline-none ${
-                        isActive
-                          ? "bg-white/[0.14] text-cyan-300 font-semibold shadow-sm border border-cyan-400/40 backdrop-blur-sm"
-                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      {btn.label}
-                    </button>
-                  );
-                })}
+          {/* Dual Side-by-Side Half-Size Graphs: Load & Temperature */}
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            {/* GPU Load Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">GPU Load</span>
+                <span className="font-mono font-bold text-cyan-300">
+                  {gpu.utilization_percent.toFixed(0)}%
+                </span>
               </div>
+              <Sparkline
+                data={gpuLoadHistory}
+                strokeColor="#06b6d4"
+                gradientColor="#06b6d4"
+                min={0}
+                max={100}
+                unit="%"
+                className="h-14"
+                height={50}
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px]">
-              <span className="text-[10px] text-zinc-400 font-sans">
-                {gpuConfig.label}:
-              </span>
-              <span
-                className="font-mono font-bold text-xs"
-                style={{ color: gpuConfig.color }}
-              >
-                {gpuConfig.currentValue}
-              </span>
+            {/* GPU Temp Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">GPU Temp</span>
+                <span className="font-mono font-bold text-rose-400">
+                  {gpu.temp_celsius.toFixed(0)}°C
+                </span>
+              </div>
+              <Sparkline
+                data={gpuTempHistory}
+                strokeColor="#f87171"
+                gradientColor="#f87171"
+                min={30}
+                max={100}
+                unit="°C"
+                className="h-14"
+                height={50}
+              />
             </div>
           </div>
-
-          {/* GPU Sparkline with smooth animation and dynamic scaling */}
-          <Sparkline
-            data={gpuConfig.history}
-            strokeColor={gpuConfig.color}
-            gradientColor={gpuConfig.color}
-            min={gpuConfig.min}
-            max={gpuConfig.max}
-            unit={gpuConfig.unit}
-          />
         </section>
       </div>
 
