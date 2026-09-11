@@ -93,20 +93,14 @@ if ! command -v evtest >/dev/null 2>&1; then
     fi
 fi
 
-# Configure /etc/acerx/nitro_key.conf
-mkdir -p /etc/acerx
-if [ ! -f "/etc/acerx/nitro_key.conf" ]; then
-    cat << 'KEY_CONF' > /etc/acerx/nitro_key.conf
-# Acer Nitro / Predator Dedicated Key Configuration
-# Default evdev Linux keycode for NitroSense button is 425
-NITRO_KEY=425
-KEY_CONF
-    chmod 644 /etc/acerx/nitro_key.conf
-fi
-
 # Install key listener executable
 if [ -f "scripts/nitro-key-detection.sh" ]; then
     install -m 755 scripts/nitro-key-detection.sh /usr/local/bin/acerx-nitrokey
+fi
+
+# Interactively detect and register the physical Nitro / Predator key press
+if [ -x "/usr/local/bin/acerx-nitrokey" ]; then
+    /usr/local/bin/acerx-nitrokey --detect || true
 fi
 
 # Install and enable systemd service unit
