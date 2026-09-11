@@ -47,27 +47,39 @@ export const TopBar: React.FC<TopBarProps> = ({
     await handleProfileSelect(target);
   };
 
-  const handleMinimize = () => {
+  const handleMinimize = async () => {
     try {
-      getCurrentWindow().minimize();
-    } catch (e) {
-      console.error(e);
+      await invoke("app_minimize");
+    } catch {
+      try {
+        await getCurrentWindow().minimize();
+      } catch (e) {
+        console.error("Minimize error:", e);
+      }
     }
   };
 
-  const handleMaximize = () => {
+  const handleMaximize = async () => {
     try {
-      getCurrentWindow().toggleMaximize();
-    } catch (e) {
-      console.error(e);
+      await invoke("app_toggle_maximize");
+    } catch {
+      try {
+        await getCurrentWindow().toggleMaximize();
+      } catch (e) {
+        console.error("Maximize error:", e);
+      }
     }
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     try {
-      getCurrentWindow().close();
-    } catch (e) {
-      console.error(e);
+      await invoke("app_close");
+    } catch {
+      try {
+        await getCurrentWindow().close();
+      } catch (e) {
+        console.error("Close error:", e);
+      }
     }
   };
 
@@ -92,7 +104,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="h-[46px] bg-gnome-headerbar/85 backdrop-blur-md border-b border-zinc-800/80 px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
+      className="h-[46px] bg-[#0c0d12]/60 backdrop-blur-xl border-b border-white/[0.07] px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
       data-purpose="window-headerbar"
       data-tauri-drag-region
       onMouseDown={handleMouseDown}
@@ -178,27 +190,39 @@ export const TopBar: React.FC<TopBarProps> = ({
             <line x1="21" x2="16.65" y1="21" y2="16.65" />
           </svg>
         </button>
-        <div className="h-4 w-[1px] bg-zinc-800 mx-0.5" />
+        <div className="h-4 w-[1px] bg-zinc-700/60 mx-1" />
         <button
+          type="button"
+          onMouseDown={(e) => e.stopPropagation()}
           onClick={handleMinimize}
-          className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-zinc-700/60 text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none"
+          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-white/10 active:bg-white/20 text-zinc-400 hover:text-zinc-100 transition-colors focus:outline-none cursor-pointer"
           title="Minimize"
         >
-          <span className="text-xs leading-none">−</span>
+          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 16 16">
+            <path d="M2 8a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H2.75A.75.75 0 012 8z" />
+          </svg>
         </button>
         <button
+          type="button"
+          onMouseDown={(e) => e.stopPropagation()}
           onClick={handleMaximize}
-          className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-zinc-700/60 text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none"
-          title="Maximize"
+          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-white/10 active:bg-white/20 text-zinc-400 hover:text-zinc-100 transition-colors focus:outline-none cursor-pointer"
+          title="Maximize / Restore"
         >
-          <span className="text-[10px] leading-none">□</span>
+          <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-[1.5]" viewBox="0 0 16 16">
+            <rect x="3" y="3" width="10" height="10" rx="1.5" />
+          </svg>
         </button>
         <button
+          type="button"
+          onMouseDown={(e) => e.stopPropagation()}
           onClick={handleClose}
-          className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-rose-900/40 text-zinc-400 hover:text-rose-300 transition-colors focus:outline-none"
+          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-rose-600 hover:text-white active:bg-rose-700 text-zinc-400 transition-colors focus:outline-none cursor-pointer"
           title="Close"
         >
-          <span className="text-xs leading-none">✕</span>
+          <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-2" viewBox="0 0 16 16">
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
         </button>
       </div>
     </header>

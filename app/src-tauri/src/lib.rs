@@ -156,6 +156,26 @@ async fn set_four_zone_mode(
     }
 }
 
+#[tauri::command]
+async fn app_minimize(window: tauri::Window) -> Result<(), String> {
+    window.minimize().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn app_toggle_maximize(window: tauri::Window) -> Result<(), String> {
+    let is_max = window.is_maximized().map_err(|e| e.to_string())?;
+    if is_max {
+        window.unmaximize().map_err(|e| e.to_string())
+    } else {
+        window.maximize().map_err(|e| e.to_string())
+    }
+}
+
+#[tauri::command]
+async fn app_close(window: tauri::Window) -> Result<(), String> {
+    window.close().map_err(|e| e.to_string())
+}
+
 pub fn run() {
     let telemetry = Arc::new(TelemetryCollector::new());
     let telemetry_bg = Arc::clone(&telemetry);
@@ -187,6 +207,9 @@ pub fn run() {
             set_boot_sound,
             set_per_zone_mode,
             set_four_zone_mode,
+            app_minimize,
+            app_toggle_maximize,
+            app_close,
         ])
         .run(tauri::generate_context!())
         .expect("error while running AcerX application");
