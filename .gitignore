@@ -1,0 +1,28 @@
+# Rust build artifacts
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# Node / Vite dependencies and bundles
+**/node_modules/
+**/dist/
+.DS_Store
+*.log
+
+# Linux Kernel module build artifacts
+driver/*.o
+driver/*.ko
+driver/*.mod
+driver/*.mod.c
+driver/*.mod.o
+driver/.*.cmd
+driver/modules.order
+driver/Module.symvers
+driver/.tmp_versions/
+
+# Editor & OS temporary files
+*~
+*.swp
+*.swo
+.vscode/
+.idea/

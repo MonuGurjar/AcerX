@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0d0e11;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  color: #f4f4f5;
+  font-family: 'Inter', 'Cantarell', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Libadwaita Listbox row active indicator */
+.adw-row-active {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* Adwaita segmented button styling */
+.segmented-control {
+  background: #19191c;
+  padding: 3px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Adwaita native switch */
+.adw-switch-input:checked ~ .adw-switch-slider {
+  background-color: #2dd4bf;
+}
+.adw-switch-input:checked ~ .adw-switch-slider::before {
+  transform: translateX(16px);
+  background-color: #121214;
+}
+
+/* Slider range track */
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2dd4bf;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 2px solid #18181b;
+}
+
+/* Crisp card border */
+.adw-card {
+  background-color: #242428;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Dynamic fan rotation */
+@keyframes spin-fan {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-fan {
+  animation: spin-fan linear infinite;
+}
+

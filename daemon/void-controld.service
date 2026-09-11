@@ -1,0 +1,17 @@
+[Unit]
+Description=VOID CONTROL Privileged Hardware Daemon for Acer Laptops
+After=network.target linuwu_sense.service
+Wants=linuwu_sense.service
+
+[Service]
+Type=simple
+UMask=0000
+ExecStartPre=/usr/bin/rm -f /tmp/acerx.sock /tmp/void-control.sock /run/void-control.sock
+ExecStart=/usr/local/bin/void-controld
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
