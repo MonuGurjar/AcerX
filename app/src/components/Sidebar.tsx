@@ -10,21 +10,31 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   return (
     <aside
-      className="w-52 bg-[#0c0d12]/50 backdrop-blur-xl border-r border-white/[0.07] flex flex-col justify-between py-2.5 px-2 select-none shrink-0"
+      className="w-52 relative overflow-hidden border-r border-white/[0.08] flex flex-col justify-between py-2.5 px-2 select-none shrink-0"
       data-purpose="sidebar-navigation"
     >
-      <nav className="space-y-1">
+      {/* Sidebar Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none z-0"
+        style={{
+          backgroundImage: "url('/sidebaar-bg.png')",
+        }}
+      />
+      {/* Subtle translucent dark glass overlay for contrast and legibility while preserving artwork */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#08090d]/65 via-[#08090d]/45 to-[#08090d]/70 backdrop-blur-[1px] pointer-events-none z-0" />
+
+      <nav className="space-y-1.5 relative z-10">
         {/* Item: Dashboard */}
         <button
           onClick={() => onTabChange("dashboard")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "dashboard"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 shrink-0 ${
+            className={`w-4 h-4 shrink-0 transition-colors ${
               activeTab === "dashboard" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             fill="currentColor"
@@ -32,20 +42,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           >
             <path d="M2 4.75C2 3.784 2.784 3 3.75 3h4.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 018.25 11h-4.5A1.75 1.75 0 012 9.25v-4.5zm0 8c0-.966.784-1.75 1.75-1.75h4.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 018.25 21h-4.5A1.75 1.75 0 012 19.25v-4.5zm10-8c0-.966.784-1.75 1.75-1.75h4.5c.966 0 1.75.784 1.75 1.75v4.5a1.75 1.75 0 01-1.75 1.75h-4.5A1.75 1.75 0 0112 9.25v-4.5zm0 8c0-.966.784-1.75 1.75-1.75h4.5c.966 0 1.75.784 1.75 1.75v4.5a1.75 1.75 0 01-1.75 1.75h-4.5a1.75 1.75 0 01-1.75-1.75v-4.5z" />
           </svg>
-          <span className="tracking-tight font-medium">Dashboard</span>
+          <span className="tracking-tight">Dashboard</span>
         </button>
 
         {/* Item: Fan Controls */}
         <button
           onClick={() => onTabChange("fans")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "fans"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 ${
+            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
               activeTab === "fans" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"
@@ -59,14 +69,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         {/* Item: Performance Tuning */}
         <button
           onClick={() => onTabChange("performance")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "performance"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 ${
+            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
               activeTab === "performance" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"
@@ -81,14 +91,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         {/* Item: Keyboard Lighting */}
         <button
           onClick={() => onTabChange("lighting")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "lighting"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 ${
+            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
               activeTab === "lighting" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"
@@ -96,20 +106,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" />
           </svg>
-          <span>Keyboard RGB</span>
+          <span>Keyboard Backlight</span>
         </button>
 
         {/* Item: Hardware Graphs */}
         <button
           onClick={() => onTabChange("graphs")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "graphs"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 ${
+            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
               activeTab === "graphs" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"
@@ -122,17 +132,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       </nav>
 
       {/* Sidebar Bottom Settings */}
-      <div className="pt-2 border-t border-zinc-800/80">
+      <div className="pt-2 border-t border-white/[0.08] relative z-10">
         <button
           onClick={() => onTabChange("settings")}
-          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg font-medium text-xs transition-colors focus:outline-none ${
+          className={`w-full h-9 flex items-center gap-2.5 px-3 rounded-lg text-xs transition-all focus:outline-none ${
             activeTab === "settings"
-              ? "adw-row-active text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              ? "bg-white/[0.14] text-white border border-white/20 shadow-md backdrop-blur-md font-semibold"
+              : "text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/10 border border-transparent backdrop-blur-sm font-medium"
           }`}
         >
           <svg
-            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 ${
+            className={`w-4 h-4 stroke-current fill-none stroke-2 shrink-0 transition-colors ${
               activeTab === "settings" ? "text-gnome-accent" : "text-zinc-400"
             }`}
             viewBox="0 0 24 24"

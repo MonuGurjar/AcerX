@@ -54,13 +54,13 @@ export const App: React.FC = () => {
     <div className="w-screen h-screen flex flex-col bg-[#07080c] overflow-hidden select-none font-sans text-zinc-200 border border-zinc-800/80 rounded-lg shadow-2xl relative">
       {/* Full App Mountain Cyberpunk Atmospheric Background Image */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat opacity-80"
+        className="absolute inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat opacity-95"
         style={{
           backgroundImage: "url('/background.png')",
         }}
       />
-      {/* Subtle Dark Ambient Tint for contrast while keeping wallpaper crisp across entire window */}
-      <div className="absolute inset-0 pointer-events-none z-0 bg-[#07080c]/45 backdrop-blur-[0.5px]" />
+      {/* Soft dark vignette tint to provide text contrast while keeping wallpaper vivid behind glass */}
+      <div className="absolute inset-0 pointer-events-none z-0 bg-[#07080c]/30" />
 
       <TopBar
         currentProfile={currentProfile}

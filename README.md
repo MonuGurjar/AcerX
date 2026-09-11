@@ -3,9 +3,10 @@
 </p>
 
 <h1 align="center">AcerX</h1>
-<h3 align="center">Modern Linux Hardware Control Suite for Acer Nitro & Predator Laptops</h3>
+<h3 align="center">Modern Linux Hardware Control Suite tailored for Acer Nitro V 15</h3>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Device-Acer%20Nitro%20V%2015-teal.svg" alt="Acer Nitro V 15" />
   <img src="https://img.shields.io/badge/Platform-Linux-orange.svg" alt="Platform" />
   <img src="https://img.shields.io/badge/Daemon-Rust-DEA584.svg" alt="Rust Daemon" />
   <img src="https://img.shields.io/badge/Frontend-Tauri%20v2%20%2B%20React%2019-24C8D8.svg" alt="Tauri" />
@@ -17,9 +18,12 @@
 
 ## 📖 Overview
 
-**AcerX** is a unified, lightweight, high-performance hardware management suite for **Acer Nitro** and **Predator** gaming laptops running Linux.
+> [!NOTE]
+> **AcerX is currently built and tuned specifically for the Acer Nitro V 15 series.**
 
-It serves as a full, drop-in replacement for Windows proprietary tools (NitroSense and PredatorSense), uniting a Linux kernel module, a low-overhead memory-safe **Rust hardware daemon** (`void-controld`), and a clean, responsive **Adwaita / Cyberpunk desktop interface** (`acer-x`) built with Tauri v2 and React 19.
+**AcerX** is a unified, lightweight, high-performance hardware management suite engineered specifically for the **Acer Nitro V 15** running Linux.
+
+It serves as a full, drop-in replacement for Windows proprietary tools (NitroSense), uniting a Linux kernel module, an ultra-low-overhead memory-safe **Rust hardware daemon** (`void-controld`), and an aesthetic **Cyberpunk Frosted Glassmorphism interface** (`acer-x`) built with Tauri v2 and React 19.
 
 ---
 
@@ -112,12 +116,33 @@ AcerX/
 
 ## 🚀 Installation
 
-### Option 1: One-Command Master Installer (Recommended)
+### Option 1: One-Command Fast Install (Pre-compiled Release)
+
+For users who don't want to install Rust, Node.js, or build from scratch, download and install in a single command:
+
+```bash
+curl -sL https://github.com/MonuGurjar/AcerX/releases/latest/download/AcerX-NitroV15-v0.1.0-linux-x86_64.tar.gz | tar -xz && cd AcerX-NitroV15-*-linux-x86_64 && sudo ./install.sh
+```
+
+Or step-by-step:
+```bash
+# 1. Download & extract
+wget https://github.com/MonuGurjar/AcerX/releases/latest/download/AcerX-NitroV15-v0.1.0-linux-x86_64.tar.gz
+tar -xvf AcerX-NitroV15-v0.1.0-linux-x86_64.tar.gz
+cd AcerX-NitroV15-v0.1.0-linux-x86_64
+
+# 2. Run the installer (pre-compiled binaries are copied directly into place)
+sudo ./install.sh
+```
+
+---
+
+### Option 2: Clone & Install from Source
 
 Clone the repository and run the automated installer:
 
 ```bash
-git clone https://github.com/your-username/AcerX.git
+git clone https://github.com/MonuGurjar/AcerX.git
 cd AcerX
 sudo ./install.sh
 ```
@@ -129,7 +154,9 @@ The script will automatically:
 4. Install the `acer-x` desktop binary into `/usr/local/bin/acer-x`.
 5. Register desktop launcher files and system icons in `/usr/share/applications/` and `/usr/share/icons/hicolor/`.
 
-### Option 2: Building From Source Manually
+---
+
+### Option 3: Building From Source Manually
 
 #### Prerequisites
 * **Arch / Manjaro / CachyOS**:
@@ -190,13 +217,33 @@ sudo ./uninstall.sh
 
 ---
 
+## 🛠️ What I Built & Changed in AcerX
+
+AcerX builds upon open-source foundations, introducing a complete architectural, performance, and UI overhaul tailored specifically for the Acer Nitro V 15:
+
+* **Acer Nitro V 15 Specialization**: Tuned fan duty curves, platform power envelopes, and register behaviors specifically for the Acer Nitro V 15 hardware.
+* **Tauri v2 + React 19 Client**: Re-engineered the desktop interface from scratch with Tauri v2, React 19, TypeScript, and Tailwind CSS, running with an ultra-lightweight memory footprint under 35MB RAM.
+* **Single-Binary Rust Hardware Daemon (`void-controld`)**: Built a high-performance, memory-safe compiled Rust daemon that runs as a systemd service consuming under 3MB RAM, communicating over high-speed Unix Domain Sockets (`/tmp/acerx.sock`).
+* **Cyberpunk Frosted Glassmorphism UI**: Designed a custom visual experience with translucent backdrop-filter glass cards, mountain atmospheric wallpaper depth, and custom sidebar artwork (`sidebaar-bg.png`).
+* **Live 60 FPS Telemetry Sparklines**: Added real-time SVG bezier curves with coordinate beacons for CPU and GPU, supporting instant switching between Load, Clock Speed, Temperature, and Package Power Draw (Watts via RAPL).
+* **Dual Turbine Fan Controls**: Created aerodynamic RPM tachometers, manual duty target sliders, and quick-toggle Quiet Profile modes.
+
+---
+
 ## 🤝 Credits & Acknowledgements
 
-This project is built upon the foundational work of the open-source hardware reverse-engineering community:
+AcerX is made possible thanks to the foundational engineering, reverse-engineering discoveries, and validation efforts of the following contributors:
 
-* **[Divyansh (PXDiv)](https://github.com/PXDiv)** — Creator of the original **Div Acer Manager Max (DAMX)** project. Divyansh pioneered reverse-engineering Acer's Embedded Controller registers, thermal curves, battery calibration routines, and platform logic on Linux.
-* **[0x7375646F](https://github.com/0x7375646F)** — Creator of the **[Linuwu-Sense](https://github.com/0x7375646F/Linuwu-Sense)** Linux kernel driver. 0x7375646F's kernel platform driver provides the vital low-level WMI and EC sysfs bridge enabling direct hardware communication with Acer Nitro & Predator hardware on Linux.
-* **[PANDIT RUDRA SANDIP](https://github.com/rudrapandit0504)** & **[Arsh (Trex099)](https://github.com/Trex099)** — Key contributors to DAMX development, hardware testing, and Nitro key detection scripts.
+### 🏛️ Core Upstream Engineering
+* **[Divyansh (PXDiv)](https://github.com/PXDiv)** — *Creator of [Div Acer Manager Max (DAMX)](https://github.com/PXDiv/Div-Acer-Manager-Max)*
+  * Architected the initial Linux management suite for Acer laptops, reverse-engineered the dedicated Nitro key scancode protocol (`0xf5`), and established the baseline platform control logic.
+
+* **[0x7375646F](https://github.com/0x7375646F)** — *Creator of the [Linuwu-Sense](https://github.com/0x7375646F/Linuwu-Sense) Kernel Driver*
+  * Reverse-engineered proprietary Acer PredatorSense & NitroSense ACPI/WMI interfaces, authoring the Linux kernel sysfs driver that exposes low-level thermal profiles, dual blower tachometers, RGB keyboard buses, and battery management.
+
+### 🧪 Hardware Testing & Quality Assurance
+* **[hridaycode1119](https://github.com/hridaycode1119)** — *Hardware Validation & QA Testing*
+  * Conducted hardware validation, telemetry verification, and thermal/fan curve testing specifically on the **Acer Nitro V 15**.
 
 ---
 

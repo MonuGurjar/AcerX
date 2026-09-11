@@ -104,7 +104,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="h-[46px] bg-[#0c0d12]/60 backdrop-blur-xl border-b border-white/[0.07] px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
+      className="h-[46px] bg-[#0c0d12]/50 backdrop-blur-xl border-b border-white/[0.08] px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
       data-purpose="window-headerbar"
       data-tauri-drag-region
       onMouseDown={handleMouseDown}
@@ -121,7 +121,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span className="text-xs font-semibold tracking-normal text-zinc-100 font-sans">
             AcerX
           </span>
-          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700/50">
+          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-white/[0.08] text-zinc-300 border border-white/[0.12] backdrop-blur-sm">
             Linux
           </span>
         </div>
@@ -129,7 +129,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
       {/* Center: Segmented Button Control (Power Profiles) */}
       <div className="flex items-center gap-3" data-purpose="power-modes-navigation">
-        <div className="segmented-control inline-flex items-center gap-1 text-xs font-medium text-zinc-400 bg-[#161619] p-1 rounded-lg border border-zinc-800">
+        <div className="segmented-control inline-flex items-center gap-1 text-xs font-medium text-zinc-400 glass-tile-inset p-1 rounded-lg">
           {profiles.map((p) => {
             const isActive = isProfileActive(currentProfile, p.id);
             return (
@@ -138,8 +138,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 onClick={() => handleProfileSelect(p.id)}
                 className={`px-3 py-1 rounded-[6px] transition-all flex items-center gap-1.5 focus:outline-none ${
                   isActive
-                    ? "text-teal-300 bg-zinc-800/90 shadow-sm font-semibold border border-teal-500/40 ring-1 ring-teal-500/20"
-                    : "hover:text-zinc-200 text-zinc-400 border border-transparent"
+                    ? "text-teal-300 bg-white/[0.14] shadow-sm font-semibold border border-teal-400/40 ring-1 ring-teal-400/20 backdrop-blur-sm"
+                    : "hover:text-zinc-200 text-zinc-400 border border-transparent hover:bg-white/[0.04]"
                 }`}
               >
                 {isActive && (
@@ -181,16 +181,6 @@ export const TopBar: React.FC<TopBarProps> = ({
           )}
         </div>
 
-        <button
-          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none"
-          title="Search Sensors"
-        >
-          <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="21" x2="16.65" y1="21" y2="16.65" />
-          </svg>
-        </button>
-        <div className="h-4 w-[1px] bg-zinc-700/60 mx-1" />
         <button
           type="button"
           onMouseDown={(e) => e.stopPropagation()}

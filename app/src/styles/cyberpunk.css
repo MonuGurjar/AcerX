@@ -50,13 +50,49 @@ input[type=range]::-webkit-slider-thumb {
   border: 2px solid #18181b;
 }
 
-/* Crisp card border with frosted glass backdrop blur */
+/* Premium Glassmorphic Tile / Card */
 .adw-card {
-  background-color: rgba(14, 16, 22, 0.58);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 14, 22, 0.42);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 12px 36px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adw-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 16px 44px 0 rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.30),
+    inset 0 0 20px 0 rgba(45, 212, 191, 0.04);
+}
+
+/* Glass Inset Tile (for metric clusters, sliders, and nested controls) */
+.glass-tile-inset {
+  background-color: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.35), 0 1px 0 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Glass Interactive Pill */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 /* Dynamic fan rotation */

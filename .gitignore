@@ -19,6 +19,18 @@ driver/.*.cmd
 driver/modules.order
 driver/Module.symvers
 driver/.tmp_versions/
+driver/src/*.o
+driver/src/*.ko
+driver/src/*.mod
+driver/src/*.mod.c
+driver/src/*.mod.o
+driver/src/.*.cmd
+driver/src/modules.order
+driver/src/Module.symvers
+
+# Release staging
+dist-release/
+credit-devs/
 
 # Editor & OS temporary files
 *~

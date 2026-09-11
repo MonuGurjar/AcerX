@@ -205,7 +205,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
           {/* Header Row with Status Badge */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-zinc-800/90 border border-zinc-700/60 flex items-center justify-center text-gnome-accent">
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-gnome-accent shadow-inner backdrop-blur-sm">
                 <svg className="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
                   <rect height="16" rx="2" width="16" x="4" y="4" />
                   <rect height="6" width="6" x="9" y="9" />
@@ -217,21 +217,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                 <p className="text-[11px] text-zinc-400 max-w-[200px] truncate">{cpu.name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-[10px] font-medium">
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950/50 backdrop-blur-sm border border-emerald-500/30 text-emerald-400 text-[10px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>Normal</span>
             </div>
           </div>
 
-          {/* Crisp Metric Grid (Clickable to switch graph view) */}
-          <div className="grid grid-cols-4 gap-2 my-2 bg-zinc-900/40 p-1.5 rounded-lg border border-zinc-800/60">
+          {/* Crisp Glass Metric Grid (Clickable to switch graph view) */}
+          <div className="grid grid-cols-4 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
             <button
               type="button"
               onClick={() => setCpuMetric("clock")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 cpuMetric === "clock"
-                  ? "bg-sky-950/40 border border-sky-500/50 shadow-sm ring-1 ring-sky-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-sky-950/60 border border-sky-400/50 shadow-sm ring-1 ring-sky-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${cpuMetric === "clock" ? "text-sky-400" : "text-zinc-400"}`}>Clock</span>
@@ -248,8 +248,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setCpuMetric("load")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 cpuMetric === "load"
-                  ? "bg-teal-950/40 border border-teal-500/50 shadow-sm ring-1 ring-teal-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-teal-950/60 border border-teal-400/50 shadow-sm ring-1 ring-teal-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${cpuMetric === "load" ? "text-teal-400" : "text-zinc-400"}`}>Load</span>
@@ -266,8 +266,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setCpuMetric("temp")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 cpuMetric === "temp"
-                  ? "bg-rose-950/40 border border-rose-500/50 shadow-sm ring-1 ring-rose-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-rose-950/60 border border-rose-400/50 shadow-sm ring-1 ring-rose-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${cpuMetric === "temp" ? "text-rose-400" : "text-zinc-400"}`}>Temp</span>
@@ -284,8 +284,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setCpuMetric("power")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 cpuMetric === "power"
-                  ? "bg-amber-950/40 border border-amber-500/50 shadow-sm ring-1 ring-amber-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-amber-950/60 border border-amber-400/50 shadow-sm ring-1 ring-amber-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${cpuMetric === "power" ? "text-amber-400" : "text-zinc-400"}`}>Power</span>
@@ -304,7 +304,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400">
                 Graph:
               </span>
-              <div className="inline-flex bg-zinc-900/90 p-0.5 rounded-md border border-zinc-800/80 gap-0.5">
+              <div className="inline-flex glass-tile-inset p-0.5 rounded-md gap-0.5">
                 {[
                   { id: "load", label: "Load" },
                   { id: "clock", label: "Clock" },
@@ -319,8 +319,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                       onClick={() => setCpuMetric(btn.id as TelemetryMetric)}
                       className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all focus:outline-none ${
                         isActive
-                          ? "bg-zinc-800 text-teal-300 font-semibold shadow border border-teal-500/40"
-                          : "text-zinc-400 hover:text-zinc-200"
+                          ? "bg-white/[0.14] text-teal-300 font-semibold shadow-sm border border-teal-400/40 backdrop-blur-sm"
+                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]"
                       }`}
                     >
                       {btn.label}
@@ -359,7 +359,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
           {/* Header Row with Status Badge */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-zinc-800/90 border border-zinc-700/60 flex items-center justify-center text-teal-400">
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-teal-400 shadow-inner backdrop-blur-sm">
                 <svg className="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
                   <rect height="12" rx="2" width="20" x="2" y="6" />
                   <path d="M6 18v2M10 18v2M14 18v2M18 18v2M7 10h3v4H7zM14 10h3v4h-3z" />
@@ -368,28 +368,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xs font-semibold text-zinc-100 tracking-tight">GPU Telemetry</h2>
-                  <span className="text-[9px] text-zinc-400 bg-zinc-800/90 px-1.5 py-0.5 rounded border border-zinc-700/50 font-mono">
+                  <span className="text-[9px] text-zinc-300 bg-white/[0.06] px-1.5 py-0.5 rounded border border-white/[0.1] font-mono backdrop-blur-sm">
                     VRAM: {gpu.vram_used_gb.toFixed(1)}/{gpu.vram_total_gb.toFixed(0)}GB
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-400 max-w-[200px] truncate">{gpu.name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 text-[10px] font-medium">
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-950/50 backdrop-blur-sm border border-cyan-500/30 text-cyan-400 text-[10px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
               <span>Active</span>
             </div>
           </div>
 
-          {/* Crisp Metric Grid (Clickable to switch graph view) */}
-          <div className="grid grid-cols-4 gap-2 my-2 bg-zinc-900/40 p-1.5 rounded-lg border border-zinc-800/60">
+          {/* Crisp Glass Metric Grid (Clickable to switch graph view) */}
+          <div className="grid grid-cols-4 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
             <button
               type="button"
               onClick={() => setGpuMetric("clock")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 gpuMetric === "clock"
-                  ? "bg-sky-950/40 border border-sky-500/50 shadow-sm ring-1 ring-sky-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-sky-950/60 border border-sky-400/50 shadow-sm ring-1 ring-sky-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${gpuMetric === "clock" ? "text-sky-400" : "text-zinc-400"}`}>Clock</span>
@@ -406,8 +406,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setGpuMetric("load")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 gpuMetric === "load"
-                  ? "bg-cyan-950/40 border border-cyan-500/50 shadow-sm ring-1 ring-cyan-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-cyan-950/60 border border-cyan-400/50 shadow-sm ring-1 ring-cyan-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${gpuMetric === "load" ? "text-cyan-400" : "text-zinc-400"}`}>Load</span>
@@ -424,8 +424,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setGpuMetric("temp")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 gpuMetric === "temp"
-                  ? "bg-rose-950/40 border border-rose-500/50 shadow-sm ring-1 ring-rose-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-rose-950/60 border border-rose-400/50 shadow-sm ring-1 ring-rose-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${gpuMetric === "temp" ? "text-rose-400" : "text-zinc-400"}`}>Temp</span>
@@ -442,8 +442,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               onClick={() => setGpuMetric("power")}
               className={`p-1.5 rounded-md text-left transition-all focus:outline-none ${
                 gpuMetric === "power"
-                  ? "bg-amber-950/40 border border-amber-500/50 shadow-sm ring-1 ring-amber-500/30"
-                  : "hover:bg-zinc-800/50 border border-transparent"
+                  ? "bg-amber-950/60 border border-amber-400/50 shadow-sm ring-1 ring-amber-400/30 backdrop-blur-sm"
+                  : "hover:bg-white/[0.06] hover:border-white/[0.1] border border-transparent"
               }`}
             >
               <span className={`text-[10px] font-medium block ${gpuMetric === "power" ? "text-amber-400" : "text-zinc-400"}`}>Power</span>
@@ -462,7 +462,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
               <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400">
                 Graph:
               </span>
-              <div className="inline-flex bg-zinc-900/90 p-0.5 rounded-md border border-zinc-800/80 gap-0.5">
+              <div className="inline-flex glass-tile-inset p-0.5 rounded-md gap-0.5">
                 {[
                   { id: "load", label: "Load" },
                   { id: "clock", label: "Clock" },
@@ -477,8 +477,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                       onClick={() => setGpuMetric(btn.id as TelemetryMetric)}
                       className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all focus:outline-none ${
                         isActive
-                          ? "bg-zinc-800 text-cyan-300 font-semibold shadow border border-cyan-500/40"
-                          : "text-zinc-400 hover:text-zinc-200"
+                          ? "bg-white/[0.14] text-cyan-300 font-semibold shadow-sm border border-cyan-400/40 backdrop-blur-sm"
+                          : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]"
                       }`}
                     >
                       {btn.label}
@@ -518,7 +518,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
         <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-zinc-200">Cooling System</span>
-            <span className="text-[10px] text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/40">
+            <span className="text-[10px] text-zinc-300 bg-white/[0.07] px-2 py-0.5 rounded border border-white/[0.12] backdrop-blur-sm">
               Dynamic PWM Curve
             </span>
           </div>
@@ -539,13 +539,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
 
         <div className="grid grid-cols-2 gap-4">
           {/* CPU Fan Gauge & Slider */}
-          <div className="bg-zinc-900/40 rounded-lg p-2.5 border border-zinc-800/60 flex items-center justify-between gap-4">
+          <div className="glass-tile-inset rounded-lg p-2.5 flex items-center justify-between gap-4 hover:border-white/[0.14] transition-all">
             {/* Radial Meter */}
             <div className="flex items-center gap-3">
               <div className="relative w-11 h-11 flex items-center justify-center shrink-0">
                 <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                   <path
-                    className="text-zinc-800"
+                    className="text-white/[0.08]"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     stroke="currentColor"
@@ -553,7 +553,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                     strokeWidth="3"
                   />
                   <path
-                    className="text-gnome-accent"
+                    className="text-gnome-accent drop-shadow-[0_0_8px_rgba(45,212,191,0.5)]"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     stroke="currentColor"
@@ -562,7 +562,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                     strokeWidth="3"
                   />
                 </svg>
-                <span className="absolute text-[10px] font-semibold text-zinc-200">{cpuPct}%</span>
+                <span className="absolute text-[10px] font-semibold text-zinc-100">{cpuPct}%</span>
               </div>
               <div>
                 <h3 className="text-xs font-medium text-zinc-200">CPU Blower</h3>
@@ -575,12 +575,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
             <div className="flex-1 max-w-[170px] space-y-1">
               <div className="flex justify-between text-[10px] text-zinc-400">
                 <span>Duty target</span>
-                <span className="font-medium text-zinc-300">
+                <span className="font-medium text-zinc-200">
                   {fans.cpu_is_auto ? "Auto (Dynamic)" : `${cpuFanTarget}%`}
                 </span>
               </div>
               <input
-                className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-lg appearance-none cursor-pointer accent-teal-400"
                 max="100"
                 min="0"
                 type="range"
@@ -591,13 +591,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
           </div>
 
           {/* GPU Fan Gauge & Slider */}
-          <div className="bg-zinc-900/40 rounded-lg p-2.5 border border-zinc-800/60 flex items-center justify-between gap-4">
+          <div className="glass-tile-inset rounded-lg p-2.5 flex items-center justify-between gap-4 hover:border-white/[0.14] transition-all">
             {/* Radial Meter */}
             <div className="flex items-center gap-3">
               <div className="relative w-11 h-11 flex items-center justify-center shrink-0">
                 <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                   <path
-                    className="text-zinc-800"
+                    className="text-white/[0.08]"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     stroke="currentColor"
@@ -605,7 +605,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                     strokeWidth="3"
                   />
                   <path
-                    className="text-cyan-400"
+                    className="text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     stroke="currentColor"
@@ -614,7 +614,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                     strokeWidth="3"
                   />
                 </svg>
-                <span className="absolute text-[10px] font-semibold text-zinc-200">{gpuPct}%</span>
+                <span className="absolute text-[10px] font-semibold text-zinc-100">{gpuPct}%</span>
               </div>
               <div>
                 <h3 className="text-xs font-medium text-zinc-200">GPU Blower</h3>
@@ -627,12 +627,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
             <div className="flex-1 max-w-[170px] space-y-1">
               <div className="flex justify-between text-[10px] text-zinc-400">
                 <span>Duty target</span>
-                <span className="font-medium text-zinc-300">
+                <span className="font-medium text-zinc-200">
                   {fans.gpu_is_auto ? "Auto (Dynamic)" : `${gpuFanTarget}%`}
                 </span>
               </div>
               <input
-                className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-lg appearance-none cursor-pointer accent-cyan-400"
                 max="100"
                 min="0"
                 type="range"
@@ -644,7 +644,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
         </div>
 
         {/* Small Animated Fan Indicator at bottom */}
-        <div className="mt-3 pt-2.5 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+        <div className="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-400">
           <div className="flex items-center gap-2">
             <img
               src="/acerx-animated-fan.svg"

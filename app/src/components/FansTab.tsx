@@ -59,8 +59,8 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
 
   return (
     <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
-      <section className="adw-card rounded-xl p-5 flex flex-col relative overflow-hidden bg-gradient-to-b from-zinc-900/70 to-zinc-950/80" data-purpose="fan-controls-panel">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.05)_0%,transparent_70%)] pointer-events-none" />
+      <section className="adw-card rounded-xl p-5 flex flex-col relative overflow-hidden" data-purpose="fan-controls-panel">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_0%,transparent_70%)] pointer-events-none" />
 
         {/* Top Header Row with Mode Selector */}
         <div className="flex items-center justify-between mb-5 relative z-10">
@@ -70,14 +70,14 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
           </div>
 
           {/* Mode Selector */}
-          <div className="segmented-control inline-flex items-center gap-0.5 text-xs font-medium text-zinc-400">
+          <div className="segmented-control inline-flex items-center gap-0.5 text-xs font-medium text-zinc-400 glass-tile-inset p-1 rounded-lg">
             {(["auto", "max", "custom"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => handleModeChange(m)}
                 className={`px-3.5 py-1 rounded-[7px] capitalize transition-all focus:outline-none ${
                   mode === m
-                    ? "text-zinc-100 bg-[#2d2d33] shadow-sm font-medium"
+                    ? "text-zinc-100 bg-white/[0.14] border border-white/15 shadow-sm font-medium backdrop-blur-sm"
                     : "hover:text-zinc-200 text-zinc-400"
                 }`}
               >
@@ -90,10 +90,10 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
         {/* Big Animated Fans Section Above */}
         <div className="grid grid-cols-2 gap-6 relative z-10">
           {/* CPU Turbine Card */}
-          <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800/70 flex flex-col items-center gap-4">
+          <div className="glass-tile-inset rounded-xl p-4 flex flex-col items-center gap-4">
             <div className="w-full flex items-center justify-between">
               <span className="text-xs font-semibold text-zinc-200">CPU Blower</span>
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/50">
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-white/[0.08] text-zinc-300 border border-white/[0.12] backdrop-blur-sm">
                 {fans?.cpu_is_auto ? "Auto PWM" : "Manual"}
               </span>
             </div>
@@ -119,7 +119,7 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
             </div>
 
             {/* Slider Config Below the Fan */}
-            <div className="w-full space-y-1.5 pt-2 border-t border-zinc-800/60">
+            <div className="w-full space-y-1.5 pt-2 border-t border-white/[0.08]">
               <div className="flex justify-between text-xs text-zinc-400">
                 <span>Manual Duty Target</span>
                 <span className="font-medium text-zinc-200">{cpuSpeed}%</span>
@@ -131,16 +131,16 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
                 value={cpuSpeed}
                 disabled={mode !== "custom"}
                 onChange={(e) => setCpuSpeed(parseInt(e.target.value))}
-                className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-lg appearance-none cursor-pointer accent-teal-400"
               />
             </div>
           </div>
 
           {/* GPU Turbine Card */}
-          <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800/70 flex flex-col items-center gap-4">
+          <div className="glass-tile-inset rounded-xl p-4 flex flex-col items-center gap-4">
             <div className="w-full flex items-center justify-between">
               <span className="text-xs font-semibold text-zinc-200">GPU Blower</span>
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/50">
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-white/[0.08] text-zinc-300 border border-white/[0.12] backdrop-blur-sm">
                 {fans?.gpu_is_auto ? "Auto PWM" : "Manual"}
               </span>
             </div>
@@ -166,7 +166,7 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
             </div>
 
             {/* Slider Config Below the Fan */}
-            <div className="w-full space-y-1.5 pt-2 border-t border-zinc-800/60">
+            <div className="w-full space-y-1.5 pt-2 border-t border-white/[0.08]">
               <div className="flex justify-between text-xs text-zinc-400">
                 <span>Manual Duty Target</span>
                 <span className="font-medium text-zinc-200">{gpuSpeed}%</span>
@@ -178,7 +178,7 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
                 value={gpuSpeed}
                 disabled={mode !== "custom"}
                 onChange={(e) => setGpuSpeed(parseInt(e.target.value))}
-                className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-lg appearance-none cursor-pointer accent-cyan-400"
               />
             </div>
           </div>

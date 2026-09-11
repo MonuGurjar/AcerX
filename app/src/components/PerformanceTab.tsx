@@ -132,8 +132,8 @@ export const PerformanceTab: React.FC<PerformanceTabProps> = ({
                 onClick={() => handleProfileClick(p.id)}
                 className={`p-3 rounded-lg border transition-all cursor-pointer ${
                   isActive
-                    ? "bg-zinc-800 border-teal-500/60 shadow-sm ring-1 ring-teal-500/30"
-                    : "bg-zinc-900/40 border-zinc-800/60 hover:border-zinc-700/60"
+                    ? "bg-white/[0.14] border-teal-400/60 shadow-md ring-1 ring-teal-400/30 backdrop-blur-md"
+                    : "glass-tile-inset hover:border-white/[0.16] hover:bg-white/[0.04]"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
