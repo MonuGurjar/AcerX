@@ -3,9 +3,10 @@
 </p>
 
 <h1 align="center">AcerX</h1>
-<h3 align="center">Modern Linux Hardware Control Suite tailored for Acer Nitro V 15</h3>
+<h3 align="center">Open-Source NitroSense Alternative for Linux — Tailored for Acer Nitro V 15 & Predator Laptops</h3>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Alternative-Acer%20NitroSense%20for%20Linux-e63946.svg" alt="NitroSense Linux Alternative" />
   <img src="https://img.shields.io/badge/Device-Acer%20Nitro%20V%2015-teal.svg" alt="Acer Nitro V 15" />
   <img src="https://img.shields.io/badge/Platform-Linux-orange.svg" alt="Platform" />
   <img src="https://img.shields.io/badge/Daemon-Rust-DEA584.svg" alt="Rust Daemon" />
@@ -19,11 +20,12 @@
 ## 📖 Overview
 
 > [!NOTE]
-> **AcerX is currently built and tuned specifically for the Acer Nitro V 15 series.**
+> **AcerX is the premier modern, open-source Linux alternative to Acer NitroSense and PredatorSense.**  
+> Engineered and calibrated specifically for the **Acer Nitro V 15** (`ANV15-51` / `ANV15-41`) and compatible Nitro/Predator gaming laptops.
 
 **AcerX** is a unified, lightweight, high-performance hardware management suite engineered specifically for the **Acer Nitro V 15** running Linux.
 
-It serves as a full, drop-in replacement for Windows proprietary tools (NitroSense), uniting a Linux kernel module, an ultra-low-overhead memory-safe **Rust hardware daemon** (`void-controld`), and an aesthetic **Cyberpunk Frosted Glassmorphism interface** (`acer-x`) built with Tauri v2 and React 19.
+If you are looking for **NitroSense on Linux**, **Acer Nitro fan control on Linux**, or **Acer thermal management for Linux**, AcerX serves as a complete, drop-in replacement for Windows proprietary tools (NitroSense / PredatorSense). It unites an ACPI/WMI Linux kernel module, an ultra-low-overhead memory-safe **Rust hardware daemon** (`void-controld`), and an aesthetic **Cyberpunk Frosted Glassmorphism interface** (`acer-x`) built with Tauri v2 and React 19.
 
 ---
 
@@ -225,6 +227,11 @@ codebase, and technology stack, built with Rust, TypeScript, and Tauri.
 
 AcerX is an independent community project and is not affiliated with,
 endorsed by, or sponsored by Acer, Linuwu-Sense, or Div Acer Manager Max.
+
+---
+
+## 🔍 Search & Discovery Tags
+`nitro-sense` • `nitrosense-linux` • `acer-nitrosense` • `acer-nitro-v15` • `predatorsense-linux` • `acer-fan-control` • `linuwu-sense` • `tauri-v2` • `linux-hardware-monitor` • `rust-daemon`
 
 ---
 

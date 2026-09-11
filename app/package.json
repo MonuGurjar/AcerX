@@ -1,5 +1,15 @@
 {
   "name": "acer-x",
+  "description": "Open-source NitroSense & PredatorSense hardware suite for Linux (Acer Nitro V 15)",
+  "keywords": [
+    "nitrosense",
+    "nitrosense-linux",
+    "acer-nitro",
+    "nitro-v15",
+    "predatorsense",
+    "fan-control",
+    "linux-hardware"
+  ],
   "private": true,
   "version": "0.1.0",
   "type": "module",

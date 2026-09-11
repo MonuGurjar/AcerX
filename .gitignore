@@ -30,6 +30,7 @@ driver/src/Module.symvers
 
 # Release staging
 dist-release/
+package-release.sh
 credit-devs/
 
 # Editor & OS temporary files
