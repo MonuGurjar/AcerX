@@ -16,6 +16,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
   const [gpuLoadHistory, setGpuLoadHistory] = useState<number[]>(() => Array(20).fill(20));
   const [gpuTempHistory, setGpuTempHistory] = useState<number[]>(() => Array(20).fill(50));
 
+  // iGPU metric histories
+  const [igpuLoadHistory, setIgpuLoadHistory] = useState<number[]>(() => Array(20).fill(15));
+  const [igpuFreqHistory, setIgpuFreqHistory] = useState<number[]>(() => Array(20).fill(1200));
+
   const [cpuFanTarget, setCpuFanTarget] = useState<number>(0);
   const [gpuFanTarget, setGpuFanTarget] = useState<number>(0);
   const [quietProfile, setQuietProfile] = useState(false);
@@ -27,6 +31,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
 
       setGpuLoadHistory((prev) => [...prev.slice(1), metrics.gpu.utilization_percent]);
       setGpuTempHistory((prev) => [...prev.slice(1), metrics.gpu.temp_celsius]);
+
+      if (metrics.igpu) {
+        setIgpuLoadHistory((prev) => [...prev.slice(1), metrics.igpu!.utilization_percent]);
+        setIgpuFreqHistory((prev) => [...prev.slice(1), metrics.igpu!.cur_freq_mhz]);
+      }
 
       if (metrics.fans) {
         if (metrics.fans.cpu_duty !== undefined) {
@@ -55,6 +64,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
     temp_celsius: 64,
     power_watts: 95,
     utilization_percent: 42,
+  };
+
+  const igpu = metrics?.igpu || {
+    name: "Intel® UHD Graphics (Raptor Lake)",
+    cur_freq_mhz: 1400,
+    max_freq_mhz: 1400,
+    utilization_percent: 22,
+  };
+
+  const ram = metrics?.ram || {
+    used_gb: 8.9,
+    total_gb: 15.3,
+    percent: 58,
+  };
+
+  const storage = metrics?.storage || {
+    used_gb: 250,
+    total_gb: 477,
+    percent: 52,
   };
 
   const fans = metrics?.fans || {
@@ -89,11 +117,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
   };
 
   return (
-    <div className="flex-1 p-4 flex flex-col justify-between overflow-y-auto bg-transparent space-y-3.5" data-purpose="telemetry-dashboard">
+    <div className="flex-1 p-4 flex flex-col justify-between overflow-y-auto bg-transparent space-y-4" data-purpose="telemetry-dashboard">
       {/* Top Telemetry Row: CPU & GPU Cards */}
-      <div className="grid grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-2 gap-4">
         {/* CPU Card */}
-        <section className="adw-card rounded-xl p-3.5 flex flex-col justify-between" data-purpose="cpu-monitor-card">
+        <section className="adw-card rounded-xl p-4 flex flex-col justify-between" data-purpose="cpu-monitor-card">
           {/* Header Row with Status Badge */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -116,7 +144,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
           </div>
 
           {/* Crisp Glass Metric Grid: Clock & Power */}
-          <div className="grid grid-cols-2 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
+          <div className="grid grid-cols-2 gap-2 my-2.5 glass-tile-inset p-2 rounded-lg">
             <div className="p-1.5 rounded-md text-left">
               <span className="text-[10px] font-medium block text-sky-400">Clock Speed</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
@@ -155,8 +183,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                 min={0}
                 max={100}
                 unit="%"
-                className="h-14"
-                height={50}
+                className="h-16"
+                height={58}
               />
             </div>
 
@@ -175,15 +203,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                 min={30}
                 max={105}
                 unit="°C"
-                className="h-14"
-                height={50}
+                className="h-16"
+                height={58}
               />
             </div>
           </div>
         </section>
 
         {/* GPU Card */}
-        <section className="adw-card rounded-xl p-3.5 flex flex-col justify-between" data-purpose="gpu-monitor-card">
+        <section className="adw-card rounded-xl p-4 flex flex-col justify-between" data-purpose="gpu-monitor-card">
           {/* Header Row with Status Badge */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -205,7 +233,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
           </div>
 
           {/* Crisp Glass Metric Grid: Clock, Memory Usage (VRAM), Power */}
-          <div className="grid grid-cols-3 gap-2 my-2 glass-tile-inset p-1.5 rounded-lg">
+          <div className="grid grid-cols-3 gap-2 my-2.5 glass-tile-inset p-2 rounded-lg">
             <div className="p-1.5 rounded-md text-left">
               <span className="text-[10px] font-medium block text-sky-400">Core Clock</span>
               <div className="flex items-baseline gap-0.5 mt-0.5">
@@ -254,8 +282,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                 min={0}
                 max={100}
                 unit="%"
-                className="h-14"
-                height={50}
+                className="h-16"
+                height={58}
               />
             </div>
 
@@ -274,114 +302,217 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
                 min={30}
                 max={100}
                 unit="°C"
-                className="h-14"
-                height={50}
+                className="h-16"
+                height={58}
               />
             </div>
           </div>
         </section>
       </div>
 
-      {/* Middle Row: RAM Usage, Storage Usage, and iGPU Usage */}
-      <div className="grid grid-cols-3 gap-3.5" data-purpose="secondary-telemetry-row">
-        {/* RAM Usage Card */}
-        <section className="adw-card rounded-xl p-3 flex flex-col justify-between" data-purpose="ram-card">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-                <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                  <rect x="2" y="6" width="20" height="12" rx="2" />
-                  <path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01" />
-                </svg>
+      {/* Middle Row: Left 2 columns (RAM & Storage) + Right 1 column (iGPU styled like NVIDIA GPU) */}
+      <div className="grid grid-cols-2 gap-4" data-purpose="secondary-telemetry-row">
+        {/* Left Half: RAM & Storage side-by-side matching CPU width */}
+        <div className="grid grid-cols-2 gap-3.5 h-full">
+          {/* RAM Usage Card */}
+          <section className="adw-card rounded-xl p-4 flex flex-col justify-between h-full" data-purpose="ram-card">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-md bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shadow-inner">
+                  <svg className="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-zinc-100">RAM Telemetry</h3>
+                  <p className="text-[10px] text-zinc-400">System Memory</p>
+                </div>
               </div>
-              <span className="text-xs font-semibold text-zinc-200">RAM Usage</span>
-            </div>
-            <span className="font-mono font-bold text-xs text-purple-400">
-              {metrics?.ram ? `${metrics.ram.percent.toFixed(0)}%` : "58%"}
-            </span>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex items-baseline justify-between text-[11px]">
-              <span className="text-zinc-400">Allocated Memory</span>
-              <span className="font-mono text-zinc-200 font-medium">
-                {metrics?.ram ? `${metrics.ram.used_gb.toFixed(1)} / ${metrics.ram.total_gb.toFixed(1)} GB` : "8.9 / 15.3 GB"}
+              <span className="font-mono font-bold text-xs text-purple-400 bg-purple-950/40 px-2 py-0.5 rounded border border-purple-500/30">
+                {ram.percent.toFixed(0)}%
               </span>
             </div>
-            {/* Progress Bar */}
-            <div className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-purple-500 to-indigo-400 rounded-full transition-all duration-500"
-                style={{ width: `${metrics?.ram ? metrics.ram.percent : 58}%` }}
+
+            <div className="my-2.5">
+              <span className="text-[10px] font-medium text-zinc-400 block">Allocated Memory</span>
+              <div className="flex items-baseline gap-1 mt-0.5">
+                <span className="text-2xl font-bold font-mono tracking-tight text-purple-300">
+                  {ram.used_gb.toFixed(1)}
+                </span>
+                <span className="text-xs text-zinc-400 font-mono">/ {ram.total_gb.toFixed(1)} GB</span>
+              </div>
+              {/* Progress Bar */}
+              <div className="w-full h-2 bg-black/40 border border-white/[0.08] rounded-full overflow-hidden mt-2">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-400 rounded-full transition-all duration-500"
+                  style={{ width: `${ram.percent}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.08] text-[10px]">
+              <div className="flex flex-col">
+                <span className="text-zinc-400">Available</span>
+                <span className="font-mono font-semibold text-zinc-200">
+                  {(ram.total_gb - ram.used_gb).toFixed(1)} GB
+                </span>
+              </div>
+              <div className="flex flex-col text-right">
+                <span className="text-zinc-400">Channels</span>
+                <span className="font-mono font-semibold text-teal-400">Dual DDR5</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Storage Usage Card */}
+          <section className="adw-card rounded-xl p-4 flex flex-col justify-between h-full" data-purpose="storage-card">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-inner">
+                  <svg className="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+                    <path d="M4 6h16a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2zM4 14h16a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 012-2z" />
+                    <circle cx="6" cy="9" r="1" />
+                    <circle cx="6" cy="17" r="1" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-zinc-100">NVMe Storage</h3>
+                  <p className="text-[10px] text-zinc-400">Root Partition (/)</p>
+                </div>
+              </div>
+              <span className="font-mono font-bold text-xs text-blue-400 bg-blue-950/40 px-2 py-0.5 rounded border border-blue-500/30">
+                {storage.percent.toFixed(0)}%
+              </span>
+            </div>
+
+            <div className="my-2.5">
+              <span className="text-[10px] font-medium text-zinc-400 block">Capacity Used</span>
+              <div className="flex items-baseline gap-1 mt-0.5">
+                <span className="text-2xl font-bold font-mono tracking-tight text-blue-300">
+                  {storage.used_gb.toFixed(0)}
+                </span>
+                <span className="text-xs text-zinc-400 font-mono">/ {storage.total_gb.toFixed(0)} GB</span>
+              </div>
+              {/* Progress Bar */}
+              <div className="w-full h-2 bg-black/40 border border-white/[0.08] rounded-full overflow-hidden mt-2">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-400 rounded-full transition-all duration-500"
+                  style={{ width: `${storage.percent}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.08] text-[10px]">
+              <div className="flex flex-col">
+                <span className="text-zinc-400">Free Space</span>
+                <span className="font-mono font-semibold text-zinc-200">
+                  {(storage.total_gb - storage.used_gb).toFixed(0)} GB
+                </span>
+              </div>
+              <div className="flex flex-col text-right">
+                <span className="text-zinc-400">Interface</span>
+                <span className="font-mono font-semibold text-sky-400">PCIe Gen4</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Right Half: Intel iGPU Card (styled exactly like NVIDIA GPU) */}
+        <section className="adw-card rounded-xl p-4 flex flex-col justify-between h-full" data-purpose="igpu-monitor-card">
+          {/* Header Row with Status Badge */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-emerald-400 shadow-inner backdrop-blur-sm">
+                <svg className="w-4 h-4 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+                  <rect height="16" rx="2" width="16" x="4" y="4" />
+                  <path d="M9 9h6v6H9z" />
+                  <path d="M1 9h3M1 15h3M20 9h3M20 15h3M9 1v3M15 1v3M9 20v3M15 20v3" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-xs font-semibold text-zinc-100 tracking-tight">iGPU Telemetry</h2>
+                <p className="text-[11px] text-zinc-400 max-w-[200px] truncate">{igpu.name}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950/50 backdrop-blur-sm border border-emerald-500/30 text-emerald-400 text-[10px] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Active</span>
+            </div>
+          </div>
+
+          {/* Crisp Glass Metric Grid: Core Clock, Shared Memory, Boost */}
+          <div className="grid grid-cols-3 gap-2 my-2.5 glass-tile-inset p-2 rounded-lg">
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-sky-400">Core Clock</span>
+              <div className="flex items-baseline gap-0.5 mt-0.5">
+                <span className="text-base font-bold tracking-tight text-zinc-100">
+                  {igpu.cur_freq_mhz}
+                </span>
+                <span className="text-[10px] text-zinc-400">MHz</span>
+              </div>
+            </div>
+
+            <div className="p-1.5 rounded-md text-left bg-emerald-950/30 border border-emerald-500/20">
+              <span className="text-[10px] font-medium block text-emerald-400">Shared VRAM</span>
+              <div className="flex items-baseline gap-0.5 mt-0.5">
+                <span className="text-base font-bold tracking-tight text-emerald-300 font-mono">
+                  {(ram.used_gb * 0.2).toFixed(1)}
+                </span>
+                <span className="text-[10px] text-zinc-400">/ {(ram.total_gb * 0.5).toFixed(0)} GB</span>
+              </div>
+            </div>
+
+            <div className="p-1.5 rounded-md text-left">
+              <span className="text-[10px] font-medium block text-amber-400">Max Boost</span>
+              <div className="flex items-baseline gap-0.5 mt-0.5">
+                <span className="text-base font-bold tracking-tight text-zinc-100">
+                  {igpu.max_freq_mhz}
+                </span>
+                <span className="text-[10px] text-zinc-400">MHz</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Dual Side-by-Side Half-Size Graphs: Load & Frequency */}
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            {/* iGPU Load Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">iGPU Load</span>
+                <span className="font-mono font-bold text-emerald-300">
+                  {igpu.utilization_percent.toFixed(0)}%
+                </span>
+              </div>
+              <Sparkline
+                data={igpuLoadHistory}
+                strokeColor="#10b981"
+                gradientColor="#10b981"
+                min={0}
+                max={100}
+                unit="%"
+                className="h-16"
+                height={58}
               />
             </div>
-          </div>
-        </section>
 
-        {/* Storage Usage Card */}
-        <section className="adw-card rounded-xl p-3 flex flex-col justify-between" data-purpose="storage-card">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-                <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                  <path d="M4 6h16a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2zM4 14h16a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 012-2z" />
-                  <circle cx="6" cy="9" r="1" />
-                  <circle cx="6" cy="17" r="1" />
-                </svg>
+            {/* iGPU Frequency Graph */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center justify-between px-1 text-[10px]">
+                <span className="text-zinc-400 font-medium">Frequency</span>
+                <span className="font-mono font-bold text-sky-400">
+                  {igpu.cur_freq_mhz} MHz
+                </span>
               </div>
-              <span className="text-xs font-semibold text-zinc-200">NVMe Storage (/)</span>
-            </div>
-            <span className="font-mono font-bold text-xs text-blue-400">
-              {metrics?.storage ? `${metrics.storage.percent.toFixed(0)}%` : "52%"}
-            </span>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex items-baseline justify-between text-[11px]">
-              <span className="text-zinc-400">Capacity Used</span>
-              <span className="font-mono text-zinc-200 font-medium">
-                {metrics?.storage ? `${metrics.storage.used_gb.toFixed(0)} / ${metrics.storage.total_gb.toFixed(0)} GB` : "250 / 477 GB"}
-              </span>
-            </div>
-            {/* Progress Bar */}
-            <div className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-sky-400 rounded-full transition-all duration-500"
-                style={{ width: `${metrics?.storage ? metrics.storage.percent : 52}%` }}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* iGPU Usage Card */}
-        <section className="adw-card rounded-xl p-3 flex flex-col justify-between" data-purpose="igpu-card">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                <svg className="w-3.5 h-3.5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <path d="M7 7h3v3H7zM7 14h3v3H7zM14 7h3v3h-3zM14 14h3v3h-3z" />
-                </svg>
-              </div>
-              <span className="text-xs font-semibold text-zinc-200">Intel iGPU (UHD)</span>
-            </div>
-            <span className="font-mono font-bold text-xs text-emerald-400">
-              {metrics?.igpu ? `${metrics.igpu.cur_freq_mhz} MHz` : "1400 MHz"}
-            </span>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex items-baseline justify-between text-[11px]">
-              <span className="text-zinc-400">GPU Core Clock</span>
-              <span className="font-mono text-zinc-200 font-medium">
-                {metrics?.igpu ? `${metrics.igpu.cur_freq_mhz} / ${metrics.igpu.max_freq_mhz} MHz` : "1400 / 1400 MHz"}
-              </span>
-            </div>
-            {/* Progress Bar */}
-            <div className="w-full h-1.5 bg-black/40 border border-white/[0.08] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500"
-                style={{ width: `${metrics?.igpu ? metrics.igpu.utilization_percent : 100}%` }}
+              <Sparkline
+                data={igpuFreqHistory}
+                strokeColor="#38bdf8"
+                gradientColor="#38bdf8"
+                min={300}
+                max={1500}
+                unit="MHz"
+                className="h-16"
+                height={58}
               />
             </div>
           </div>
