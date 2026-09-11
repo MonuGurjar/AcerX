@@ -89,7 +89,7 @@ export const LightingTab: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-gnome-bg space-y-4">
+    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
       {/* Tab Switcher & Status Banner */}
       <div className="flex items-center justify-between">
         <div>

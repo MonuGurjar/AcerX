@@ -58,7 +58,7 @@ export const FansTab: React.FC<FansTabProps> = ({ fans }) => {
   const gpuPct = Math.min(Math.max(Math.round(((fans?.gpu_rpm || 0) / 7500) * 100), fans?.gpu_rpm ? 5 : 0), 100);
 
   return (
-    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-gnome-bg space-y-4">
+    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
       <section className="adw-card rounded-xl p-5 flex flex-col relative overflow-hidden bg-gradient-to-b from-zinc-900/70 to-zinc-950/80" data-purpose="fan-controls-panel">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.05)_0%,transparent_70%)] pointer-events-none" />
 

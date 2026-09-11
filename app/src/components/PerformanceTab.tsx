@@ -107,7 +107,7 @@ export const PerformanceTab: React.FC<PerformanceTabProps> = ({
   ];
 
   return (
-    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-gnome-bg space-y-4">
+    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
       {statusMsg && (
         <div className="text-xs py-1.5 px-3 rounded-lg bg-teal-950/40 border border-teal-500/30 text-teal-400 font-medium">
           {statusMsg}

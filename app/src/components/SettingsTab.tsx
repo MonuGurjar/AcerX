@@ -57,7 +57,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({ metrics }) => {
   };
 
   return (
-    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-gnome-bg space-y-4">
+    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-4">
       {/* Hardware Toggles */}
       <section className="adw-card rounded-xl p-4">
         <div className="mb-3">

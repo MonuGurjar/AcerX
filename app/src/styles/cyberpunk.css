@@ -50,11 +50,13 @@ input[type=range]::-webkit-slider-thumb {
   border: 2px solid #18181b;
 }
 
-/* Crisp card border */
+/* Crisp card border with frosted glass backdrop blur */
 .adw-card {
-  background-color: #242428;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background-color: rgba(26, 27, 32, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* Dynamic fan rotation */

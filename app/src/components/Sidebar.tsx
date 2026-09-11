@@ -10,7 +10,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   return (
     <aside
-      className="w-52 bg-gnome-sidebar border-r border-zinc-800/80 flex flex-col justify-between py-2.5 px-2 select-none shrink-0"
+      className="w-52 bg-gnome-sidebar/85 backdrop-blur-md border-r border-zinc-800/80 flex flex-col justify-between py-2.5 px-2 select-none shrink-0"
       data-purpose="sidebar-navigation"
     >
       <nav className="space-y-1">

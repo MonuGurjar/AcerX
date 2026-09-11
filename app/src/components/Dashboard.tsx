@@ -197,7 +197,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ metrics }) => {
   };
 
   return (
-    <div className="flex-1 p-4 flex flex-col justify-between overflow-y-auto bg-gnome-bg space-y-3.5" data-purpose="telemetry-dashboard">
+    <div className="flex-1 p-4 flex flex-col justify-between overflow-y-auto bg-transparent space-y-3.5" data-purpose="telemetry-dashboard">
       {/* Top Telemetry Row: CPU & GPU Cards */}
       <div className="grid grid-cols-2 gap-3.5">
         {/* CPU Card */}

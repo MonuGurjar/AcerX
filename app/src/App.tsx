@@ -51,7 +51,17 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-gnome-bg overflow-hidden select-none font-sans text-zinc-200 border border-zinc-800/80 rounded-lg shadow-2xl">
+    <div className="w-screen h-screen flex flex-col bg-[#0b0c10] overflow-hidden select-none font-sans text-zinc-200 border border-zinc-800/80 rounded-lg shadow-2xl relative">
+      {/* Mountain Cyberpunk Atmospheric Background Image */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat opacity-35"
+        style={{
+          backgroundImage: "url('/background.png')",
+        }}
+      />
+      {/* Dark Ambient Vignette / Gradient Overlay for optimal contrast & readability */}
+      <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-t from-[#0b0c10]/95 via-[#0b0c10]/40 to-[#0b0c10]/85" />
+
       <TopBar
         currentProfile={currentProfile}
         isPluggedIn={metrics?.is_plugged_in ?? true}
@@ -60,10 +70,10 @@ export const App: React.FC = () => {
         onProfileChange={(p) => setCurrentProfile(p)}
       />
 
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden relative z-10">
         <Sidebar activeTab={activeTab} onTabChange={(t) => setActiveTab(t)} />
 
-        <main className="flex-1 flex flex-col overflow-y-auto bg-gnome-bg">
+        <main className="flex-1 flex flex-col overflow-y-auto bg-transparent">
           {activeTab === "dashboard" && <Dashboard metrics={metrics} />}
           {activeTab === "fans" && <FansTab fans={metrics?.fans ?? null} />}
           {activeTab === "performance" && (

@@ -20,7 +20,7 @@ export const GraphsTab: React.FC<GraphsTabProps> = ({ metrics }) => {
   }, [metrics]);
 
   return (
-    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-gnome-bg space-y-3.5">
+    <div className="flex-1 p-4 flex flex-col overflow-y-auto bg-transparent space-y-3.5">
       <section className="adw-card rounded-xl p-3.5 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-zinc-200">CPU Thermal Curve (°C)</span>

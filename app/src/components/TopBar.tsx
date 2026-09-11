@@ -92,7 +92,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
-      className="h-[46px] bg-gnome-headerbar border-b border-zinc-800/80 px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
+      className="h-[46px] bg-gnome-headerbar/85 backdrop-blur-md border-b border-zinc-800/80 px-3.5 flex items-center justify-between select-none z-20 shrink-0 cursor-default"
       data-purpose="window-headerbar"
       data-tauri-drag-region
       onMouseDown={handleMouseDown}
