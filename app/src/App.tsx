@@ -10,6 +10,7 @@ import { BatteryTab } from "./components/BatteryTab";
 import { LightingTab } from "./components/LightingTab";
 import { GraphsTab } from "./components/GraphsTab";
 import { SettingsTab } from "./components/SettingsTab";
+import { WindowResizeHandles } from "./components/WindowResizeHandles";
 import "./styles/cyberpunk.css";
 
 export const App: React.FC = () => {
@@ -82,6 +83,8 @@ export const App: React.FC = () => {
           {activeTab === "settings" && <SettingsTab metrics={metrics} />}
         </main>
       </div>
+
+      <WindowResizeHandles />
     </div>
   );
 };

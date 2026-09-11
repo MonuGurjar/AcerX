@@ -199,6 +199,35 @@ Developed and maintained by **[Monu Gurjar](https://github.com/MonuGurjar)**.
 
 ---
 
+## 🙏 Credits & Acknowledgements
+
+### Linuwu-Sense
+
+AcerX uses the Linux hardware driver from
+[Linuwu-Sense](https://github.com/0x7375646F/Linuwu-Sense).
+
+We gratefully acknowledge the original developer and contributors of
+Linuwu-Sense for their work enabling hardware control and support for
+Acer laptops on Linux.
+
+### Div Acer Manager Max
+
+During the development of AcerX, we studied
+[Div Acer Manager Max (DAMX)](https://github.com/PXDiv/Div-Acer-Manager-Max)
+as a reference for Linux Acer hardware-management workflows and for
+exploring how application interfaces can interact with lower-level
+hardware-control components.
+
+AcerX is an independent implementation with its own architecture,
+codebase, and technology stack, built with Rust, TypeScript, and Tauri.
+
+### Disclaimer
+
+AcerX is an independent community project and is not affiliated with,
+endorsed by, or sponsored by Acer, Linuwu-Sense, or Div Acer Manager Max.
+
+---
+
 ## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0**.  
