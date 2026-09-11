@@ -15,6 +15,10 @@
   <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License" />
 </p>
 
+<p align="center">
+  <img src="assets/Promotionalimage.png" alt="AcerX Interface Showcase" width="100%" />
+</p>
+
 ---
 
 ## 📖 Overview
