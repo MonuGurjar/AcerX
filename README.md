@@ -171,16 +171,7 @@ sudo ./uninstall.sh
 
 ---
 
-## 🛠️ Built for Production
 
-* **Tailored for Acer Nitro V 15**: Tuned fan duty curves, platform power envelopes, and register behaviors specifically for Acer Nitro V 15 hardware (`ANV15-51` / `ANV15-41`).
-* **Tauri v2 + React 19 Client**: Re-engineered desktop interface with Tauri v2, React 19, TypeScript, and Tailwind CSS (<35MB RAM).
-* **Single-Binary Rust Hardware Daemon (`void-controld`)**: High-performance, memory-safe compiled Rust daemon running as a systemd service consuming under 3MB RAM, communicating over high-speed Unix Domain Sockets (`/tmp/acerx.sock`).
-* **Simultaneous Dual Graphs**: Real-time CPU & GPU telemetry with live Load and Temperature SVG sparklines.
-* **Full Telemetry Suite**: RAM, NVMe disk, and symmetric Intel iGPU telemetry cards.
-* **Dedicated Battery Care**: 80% charge limiter and battery calibration.
-
----
 
 ## 👤 Author
 
